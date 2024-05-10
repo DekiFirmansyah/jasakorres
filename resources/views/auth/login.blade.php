@@ -2,7 +2,7 @@
 'namePage' => 'Login page',
 'class' => 'login-page sidebar-mini ',
 'activePage' => 'login',
-'backgroundImage' => asset('assets') . "/img/bg14.jpg",
+'backgroundImage' => asset('assets') . "/img/surat-bg.jpeg",
 ])
 
 @section('content')
@@ -44,7 +44,7 @@
                             </span>
                             <input class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}"
                                 placeholder="{{ __('Email') }}" type="email" name="email"
-                                value="{{ old('email', 'admin@nowui.com') }}" required autofocus>
+                                value="{{ old('email', null) }}" required autofocus>
                         </div>
                         @if ($errors->has('email'))
                         <span class="invalid-feedback" style="display: block;" role="alert">
@@ -52,15 +52,15 @@
                         </span>
                         @endif
                         <div
-                            class="input-group no-border form-control-lg {{ $errors->has('password') ? ' has-danger' : '' }}">
+                            class="input-group no-border form-group {{ $errors->has('password') ? ' has-danger' : '' }}">
                             <div class="input-group-prepend">
                                 <div class="input-group-text">
                                     <i class="now-ui-icons objects_key-25"></i></i>
                                 </div>
                             </div>
                             <input placeholder="Password"
-                                class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}" name="password"
-                                placeholder="{{ __('Password') }}" type="password" value="secret" required>
+                                class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}" id="password"
+                                name="password" placeholder="{{ __('Password') }}" type="password" required>
                         </div>
                         @if ($errors->has('password'))
                         <span class="invalid-feedback" style="display: block;" role="alert">
@@ -71,12 +71,12 @@
                     <div class="card-footer ">
                         <button type="submit"
                             class="btn btn-primary btn-round btn-lg btn-block mb-3">{{ __('Get Started') }}</button>
-                        <div class="pull-left">
+                        <!-- <div class="pull-left">
                             <h6>
                                 <a href="{{ route('register') }}"
                                     class="link footer-link">{{ __('Create Account') }}</a>
                             </h6>
-                        </div>
+                        </div> -->
                         <div class="pull-right">
                             <h6>
                                 <a href="{{ route('password.request') }}"
