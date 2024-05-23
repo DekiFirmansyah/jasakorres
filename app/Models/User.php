@@ -53,4 +53,10 @@ class User extends Authenticatable
     {
     	return $this->hasOne(Validation::class);
     }
+
+    public function letters()
+    {
+        return $this->belongsToMany(Letter::class, 'validations', 'user_id', 'letter_id')
+                    ->withPivot('is_validated');
+    }
 }

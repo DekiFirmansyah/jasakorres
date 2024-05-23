@@ -13,13 +13,11 @@ return new class extends Migration
     {
         Schema::create('validations', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('letter_id');
-            $table->enum('status', ['pending', 'valid'])->default('pending');
-            $table->text('notes');
+            $table->foreignId('letter_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->boolean('is_validated')->default(false);
+            $table->text('notes')->nullable();
             $table->timestamps();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('letter_id')->references('id')->on('letters')->onDelete('cascade');
         });
     }
 

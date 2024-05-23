@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('letter_files', function (Blueprint $table) {
+        Schema::create('documents', function (Blueprint $table) {
             $table->id();
-            $table->string('letter_code');
+            $table->string('letter_code')->nullable();
             $table->string('file');
-            $table->timestamp('created_at')->nullable();
+            $table->timestamps();
         });
         
         Schema::create('letters', function (Blueprint $table) {
@@ -23,11 +23,10 @@ return new class extends Migration
             $table->string('title');
             $table->string('about');
             $table->string('purpose');
-            $table->date('date');
-            $table->unsignedBigInteger('file_id');
-            $table->text('description');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('document_id')->constrained()->onDelete('cascade');
+            $table->text('description')->nullable();
             $table->timestamps();
-            $table->foreign('file_id')->references('id')->on('letter_files')->onDelete('cascade');
         });
     }
 
@@ -36,7 +35,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('letter_files');
+        Schema::dropIfExists('documents');
         Schema::dropIfExists('letters');
     }
 };

@@ -55,10 +55,16 @@
                     <p> {{ __("User Management") }} </p>
                 </a>
             </li>
-            <li class="@if ($activePage == 'icons') active @endif">
-                <a href="{{ route('page.index','icons') }}">
+            <li class="@if ($activePage == 'letters') active @endif">
+                <a href="{{ route('letters.index') }}">
                     <i class="now-ui-icons education_paper"></i>
                     <p>{{ __('Surat') }}</p>
+                </a>
+            </li>
+            <li class="@if ($activePage == 'validations') active @endif">
+                <a href="{{ route('validations.index') }}">
+                    <i class="now-ui-icons ui-1_bell-53"></i>
+                    <p>{{ __('Validasi Surat') }}</p>
                 </a>
             </li>
             @hasanyrole('secretary')
