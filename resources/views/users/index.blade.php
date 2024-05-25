@@ -43,30 +43,30 @@
                             </tr>
                         </tfoot>
                         <tbody>
-                            @foreach($datas as $key=>$value)
+                            @foreach($datas as $key=>$user)
                             <tr>
                                 <td>{{ $key+1 }}</td>
-                                <td>{{ $value->name }}</td>
-                                <td>{{ $value->username }}</td>
+                                <td>{{ $user->name }}</td>
+                                <td>{{ $user->username }}</td>
                                 <td>
-                                    @foreach($value->roles as $key => $item)
+                                    @foreach($user->roles as $key => $item)
                                     <span class="badge bg-info">{{ $item->name }}</span>
                                     @endforeach
                                 </td>
                                 <td class="text-right">
-                                    <form onsubmit="return confirm('Delete this data permanently ?')"
-                                        action="{{ route('user.destroy',['user'=>$value->id]) }}" method="POST">
-                                        <a type="button" href="{{ route('user.edit',$value->id) }}" rel="tooltip"
-                                            class="btn btn-success btn-icon btn-sm " data-original-title=""
-                                            title="Edit">
-                                            <i class="far fa-edit"></i>
-                                        </a>
+                                    <a type="button" href="{{ route('user.edit', $user->id) }}" rel="tooltip"
+                                        class="btn btn-success btn-icon btn-sm" title="Edit">
+                                        <i class="far fa-edit"></i>
+                                    </a>
+                                    <button class="btn btn-danger btn-icon btn-sm" title="Delete"
+                                        onclick="confirmDelete({{ $user->id }})">
+                                        <i class="far fa-trash-alt"></i>
+                                    </button>
+                                    <form id="delete-form-{{ $user->id }}"
+                                        action="{{ route('user.destroy', ['user' => $user->id]) }}" method="POST"
+                                        style="display: none;">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" rel="tooltip" class="btn btn-danger btn-icon btn-sm "
-                                            title="Delete">
-                                            <i class="far fa-trash-alt"></i>
-                                        </button>
                                     </form>
                                 </td>
                             </tr>

@@ -7,6 +7,7 @@ use App\Models\Letter;
 use App\Models\User;
 use App\Models\Validation;
 use Illuminate\Support\Facades\Auth;
+use Spatie\Permission\Models\Role;
 
 class ValidationController extends Controller
 {
@@ -28,9 +29,12 @@ class ValidationController extends Controller
         $letter = Letter::findOrFail($id);
         $user = Auth::user();
 
-        // Validasi surat oleh user yang login
+        // Validasi surat oleh user yang login dengan catatan
         if ($letter->validators()->where('user_id', $user->id)->exists()) {
-            $letter->validators()->updateExistingPivot($user->id, ['is_validated' => true]);
+            $letter->validators()->updateExistingPivot($user->id, [
+                'is_validated' => true,
+                'notes' => $request->input('notes')
+            ]);
         }
 
         return redirect()->route('validations.index')->with('success', 'Surat berhasil divalidasi.');

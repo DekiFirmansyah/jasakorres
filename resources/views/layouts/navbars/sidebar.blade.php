@@ -4,10 +4,10 @@
 -->
     <div class="logo">
         <a href="http://www.creative-tim.com" class="simple-text logo-mini">
-            {{ __('CT') }}
+            <img src="{{ asset('assets') }}/img/logo-jpt.png" alt="CT" />
         </a>
         <a href="http://www.creative-tim.com" class="simple-text logo-normal">
-            {{ __('Creative Tim') }}
+            {{ __('E-Surat JPT') }}
         </a>
     </div>
     <div class="sidebar-wrapper" id="sidebar-wrapper">
@@ -49,25 +49,31 @@
                     <p> {{ __("User Profile") }} </p>
                 </a>
             </li>
+            @hasanyrole('admin')
             <li class="@if ($activePage == 'users') active @endif">
                 <a href="{{ route('user.index') }}">
                     <i class="now-ui-icons design_bullet-list-67"></i>
                     <p> {{ __("User Management") }} </p>
                 </a>
             </li>
+            @endhasanyrole
+            @hasanyrole('staff|secretary')
             <li class="@if ($activePage == 'letters') active @endif">
                 <a href="{{ route('letters.index') }}">
                     <i class="now-ui-icons education_paper"></i>
                     <p>{{ __('Surat') }}</p>
                 </a>
             </li>
+            @endhasanyrole
+            @hasanyrole('secretary|manager|director')
             <li class="@if ($activePage == 'validations') active @endif">
                 <a href="{{ route('validations.index') }}">
                     <i class="now-ui-icons ui-1_bell-53"></i>
                     <p>{{ __('Validasi Surat') }}</p>
                 </a>
             </li>
-            @hasanyrole('secretary')
+            @endhasanyrole
+            <!-- @hasanyrole('secretary')
             <li class="@if ($activePage == 'maps') active @endif">
                 <a href="{{ route('page.index','maps') }}">
                     <i class="now-ui-icons location_map-big"></i>
@@ -92,13 +98,7 @@
                     <i class="now-ui-icons text_caps-small"></i>
                     <p>{{ __('Typography') }}</p>
                 </a>
-            </li>
-            <li class="">
-                <a href="{{ route('page.index','upgrade') }}" class="bg-info">
-                    <i class="now-ui-icons arrows-1_cloud-download-93"></i>
-                    <p>{{ __('Upgrade to PRO') }}</p>
-                </a>
-            </li>
+            </li> -->
         </ul>
     </div>
 </div>

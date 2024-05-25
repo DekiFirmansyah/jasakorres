@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Auth;
 
 class LetterController extends Controller
 {
@@ -19,7 +20,9 @@ class LetterController extends Controller
      */
     public function index()
     {
-        $letters = Letter::with('validations.user')->get();
+        $user = Auth::user();
+
+        $letters = Letter::with('validators')->where('user_id', $user->id)->get();
         return view('letters.index', compact('letters'));
     }
 
@@ -29,7 +32,10 @@ class LetterController extends Controller
     public function create()
     {
         // Ambil daftar pengguna yang bisa menjadi validator
-        $validators = User::role(['director', 'manager', 'secretary'])->get();
+        $validators = User::role(['director', 'manager', 'secretary'])
+            ->where('id', '!=', Auth::id())
+            ->get();
+            
         return view('letters.create', compact('validators'));
     }
 

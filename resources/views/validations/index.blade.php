@@ -26,21 +26,34 @@
                     @if($lettersToValidate->isEmpty())
                     <p>Tidak ada surat yang perlu divalidasi.</p>
                     @else
-                    <ul>
+                    <div class="row">
                         @foreach($lettersToValidate as $letter)
-                        <li>
-                            <strong>{{ $letter->title }}</strong><br>
-                            {{ $letter->about }}<br>
-                            <em>Divisi: {{ $letter->purpose }}</em><br>
-                            <a href="{{ asset('storage/' . $letter->document->file) }}" target="_blank">Lihat
-                                Dokumen</a><br>
-                            <form action="{{ route('validations.validate', $letter->id) }}" method="POST">
-                                @csrf
-                                <button type="submit" class="btn btn-primary">Validasi</button>
-                            </form>
-                        </li>
+                        <div class="col-md-4">
+                            <div class="card mb-4">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ $letter->title }}</h5>
+                                    <p class="card-text">{{ Str::limit($letter->about, 100) }}</p>
+                                    <p class="card-text"><small class="text-muted">Tujuan:
+                                            {{ $letter->purpose }}</small>
+                                    </p>
+
+                                    <form action="{{ route('validations.validate', $letter->id) }}" method="POST"
+                                        class="mt-2">
+                                        @csrf
+                                        <div class="form-group">
+                                            <label for="notes">Catatan</label>
+                                            <textarea name="notes" id="notes" class="form-control" rows="3"
+                                                placeholder="Here can be letter notes"></textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Validasi</button>
+                                        <a href="{{ asset('storage/' . $letter->document->file) }}" target="_blank"
+                                            class="btn btn-info pull-right">Lihat Dokumen</a>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                         @endforeach
-                    </ul>
+                    </div>
                     @endif
                 </div>
                 <!-- end content-->

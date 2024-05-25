@@ -40,6 +40,6 @@ class Letter extends Model
     public function validators()
     {
         return $this->belongsToMany(User::class, 'validations', 'letter_id', 'user_id')
-                    ->withPivot('is_validated');
+                    ->withPivot('is_validated', 'notes');
     }
 }

@@ -55,27 +55,33 @@
                                 <td>{{ $letter->purpose }}</td>
                                 <td>
                                     <ul>
-                                        @foreach($letter->validations as $validation)
-                                        <li>{{ $validation->user->name }}:
-                                            {{ $validation->is_validated ? 'Sudah' : 'Belum' }}</li>
+                                        @foreach($letter->validators as $validator)
+                                        <li>{{ $validator->name }}:
+                                            {{ $validator->pivot->is_validated ? 'Sudah' : 'Belum' }} -
+                                            <button class="btn btn-info btn-icon btn-sm" title="Catatan"
+                                                onclick="showNote('{{ $validator->name }}', '{{ $validator->pivot->notes }}')">
+                                                <i class="far fa-comments"></i>
+                                            </button>
+                                        </li>
+                                        <br>
                                         @endforeach
                                     </ul>
                                 </td>
-                                <td>{{ $letter->created_at }}</td>
+                                <td>{{ $letter->created_at->format('d M Y') }}</td>
                                 <td class="text-right">
-                                    <form onsubmit="return confirm('Delete this data permanently ?')"
-                                        action="{{ route('letters.destroy',['letter'=>$letter->id]) }}" method="POST">
-                                        <a type="button" href="{{ route('letters.edit',$letter->id) }}" rel="tooltip"
-                                            class="btn btn-success btn-icon btn-sm " data-original-title=""
-                                            title="Edit">
-                                            <i class="far fa-edit"></i>
-                                        </a>
+                                    <a type="button" href="{{ route('letters.edit', $letter->id) }}" rel="tooltip"
+                                        class="btn btn-success btn-icon btn-sm" title="Edit">
+                                        <i class="far fa-edit"></i>
+                                    </a>
+                                    <button class="btn btn-danger btn-icon btn-sm" title="Delete"
+                                        onclick="confirmDelete({{ $letter->id }})">
+                                        <i class="far fa-trash-alt"></i>
+                                    </button>
+                                    <form id="delete-form-{{ $letter->id }}"
+                                        action="{{ route('letters.destroy', ['letter' => $letter->id]) }}" method="POST"
+                                        style="display: none;">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" rel="tooltip" class="btn btn-danger btn-icon btn-sm "
-                                            title="Delete">
-                                            <i class="far fa-trash-alt"></i>
-                                        </button>
                                     </form>
                                 </td>
                             </tr>
@@ -96,3 +102,23 @@
     <!-- end row -->
 </div>
 @endsection
+
+@push('js')
+<script>
+function showNote(validatorName, notes) {
+    if (notes) {
+        Swal.fire({
+            title: 'Catatan dari ' + validatorName,
+            text: notes,
+            icon: 'info'
+        });
+    } else {
+        Swal.fire({
+            title: 'Catatan dari ' + validatorName,
+            text: 'Tidak ada catatan',
+            icon: 'warning'
+        });
+    }
+}
+</script>
+@endpush

@@ -57,6 +57,6 @@ class User extends Authenticatable
     public function letters()
     {
         return $this->belongsToMany(Letter::class, 'validations', 'user_id', 'letter_id')
-                    ->withPivot('is_validated');
+                    ->withPivot('is_validated', 'notes');
     }
 }

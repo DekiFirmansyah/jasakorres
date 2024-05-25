@@ -85,7 +85,7 @@ class UserController extends Controller
         $user->syncRoles($request->input('roles'));
 
         //jika data berhasil ditambahkan, akan kembali ke halaman utama
-        return redirect()->route('user.index')->with('status', 'User Berhasil Ditambahkan');
+        return redirect()->route('user.index')->with('status', 'User Berhasil Diubah');
     }
 
     /**
