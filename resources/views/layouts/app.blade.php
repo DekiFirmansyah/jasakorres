@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
     <meta charset="utf-8" />
@@ -17,6 +17,8 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css"
         integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+
     <!-- CSS Files -->
     <link href="{{ asset('assets') }}/css/bootstrap.min.css" rel="stylesheet" />
     <link href="{{ asset('assets') }}/css/now-ui-dashboard.css?v=1.3.0" rel="stylesheet" />
@@ -47,6 +49,12 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <!-- Control Center for Now Ui Dashboard: parallax effects, scripts for the example pages etc -->
     <script src="{{ asset('assets') }}/js/now-ui-dashboard.min.js?v=1.3.0" type="text/javascript"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
     <!-- Now Ui Dashboard DEMO methods, don't include it in your project! -->
     <script src="{{ asset('assets') }}/demo/demo.js"></script>
     <script src="{{ asset('assets') }}/js/custom.js"></script>
@@ -79,6 +87,10 @@
                 alert.classList.add('hide');
             }, 5000);
         }
+    });
+
+    $(document).ready(function() {
+        $('.select2bs4').select2();
     });
     </script>
     @stack('js')

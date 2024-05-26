@@ -10,6 +10,7 @@ use App\Http\Requests\StoreLetterRequest;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use App\Models\User;
+use App\Models\Validation;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 
@@ -23,7 +24,18 @@ class LetterController extends Controller
         $user = Auth::user();
 
         $letters = Letter::with('validators')->where('user_id', $user->id)->get();
-        return view('letters.index', compact('letters'));
+        
+        $fullyValidatedLetters = Letter::whereHas('validators', function($query) {
+            $query->where('is_validated', true);
+        }, '=', function ($query) {
+            $query->selectRaw('COUNT(*)')
+                ->from('validations')
+                ->whereColumn('letter_id', 'letters.id');
+        })->whereHas('document', function($query) {
+            $query->whereNotNull('letter_code');
+        })->get();
+
+        return view('letters.index', compact('letters', 'fullyValidatedLetters'));
     }
 
     /**
@@ -31,10 +43,19 @@ class LetterController extends Controller
      */
     public function create()
     {
-        // Ambil daftar pengguna yang bisa menjadi validator
-        $validators = User::role(['director', 'manager', 'secretary'])
-            ->where('id', '!=', Auth::id())
-            ->get();
+        $currentUser = Auth::user();
+    
+        $validators = collect();
+
+        if (!$currentUser->hasRole('secretary')) {
+            $validators = User::role('secretary')
+                ->where('id', '!=', $currentUser->id)
+                ->get();
+        } else {
+            $validators = User::role(['director', 'manager'])
+                ->where('id', '!=', $currentUser->id)
+                ->get();
+        }
             
         return view('letters.create', compact('validators'));
     }
@@ -100,8 +121,33 @@ class LetterController extends Controller
         // Find the letter by its ID
         $letter = Letter::with('document')->findOrFail($id);
         
-        // Ambil daftar pengguna yang bisa menjadi validator (gunakan Spatie roles)
-        $validators = User::role(['director', 'manager', 'secretary'])->get();
+        // Ambil validator dengan role 'secretary' yang sudah valid
+        $secretaryValidated = Validation::where('letter_id', $id)
+        ->whereHas('user.roles', function($q) {
+            $q->where('name', 'secretary');
+        })
+        ->where('is_validated', true)
+        ->exists();
+
+        $managerValidated = Validation::where('letter_id', $id)
+        ->whereHas('user.roles', function($q) {
+            $q->where('name', 'manager');
+        })
+        ->where('is_validated', true)
+        ->exists();
+
+        // Jika ada validator 'secretary' yang sudah valid, tambahkan validator dengan role 'manager'
+        if ($secretaryValidated) {
+            if ($managerValidated) {
+                $validators = User::role(['manager', 'director', 'secretary'])->get();
+            } else {
+                $validators = User::role(['manager', 'secretary'])->get();
+            }
+        } else {
+            // Jika tidak ada, tampilkan hanya validator dengan role 'secretary'
+            $validators = User::role('secretary')->get();
+        }
+
         return view('letters.edit', compact('letter', 'validators'));
     }
 
