@@ -3,10 +3,10 @@
     Tip 1: You can change the color of the sidebar using: data-color="blue | green | orange | red | yellow"
 -->
     <div class="logo">
-        <a href="http://www.creative-tim.com" class="simple-text logo-mini">
+        <a href="" class="simple-text logo-mini">
             <img src="{{ asset('assets') }}/img/logo-jpt.png" alt="CT" />
         </a>
-        <a href="http://www.creative-tim.com" class="simple-text logo-normal">
+        <a href="" class="simple-text logo-normal">
             {{ __('E-Surat JPT') }}
         </a>
     </div>
@@ -57,7 +57,7 @@
                 </a>
             </li>
             @endhasanyrole
-            @hasanyrole('staff|secretary')
+            @hasanyrole('staff|secretary|manager')
             <li class="@if ($activePage == 'letters') active @endif">
                 <a href="{{ route('letters.index') }}">
                     <i class="now-ui-icons education_paper"></i>
@@ -70,6 +70,14 @@
                 <a href="{{ route('validations.index') }}">
                     <i class="now-ui-icons ui-1_bell-53"></i>
                     <p>{{ __('Validasi Surat') }}</p>
+                </a>
+            </li>
+            @endhasanyrole
+            @hasanyrole('director')
+            <li class="@if ($activePage == 'letterValids') active @endif">
+                <a href="{{ route('validations.valid') }}">
+                    <i class="now-ui-icons education_paper"></i>
+                    <p>{{ __('Surat Valid') }}</p>
                 </a>
             </li>
             @endhasanyrole

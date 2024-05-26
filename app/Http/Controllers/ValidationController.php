@@ -23,6 +23,21 @@ class ValidationController extends Controller
         return view('validations.index', compact('lettersToValidate'));
     }
 
+    public function letterValid()
+    {
+        $user = Auth::user();
+
+        // Surat yang sudah divalidasi sepenuhnya dan memiliki letter_code pada tabel document
+        $fullyValidatedLetters = Letter::whereHas('validations', function($query) {
+            $query->whereHas('user.roles', function($roleQuery) {
+                $roleQuery->where('name', 'director');
+            })->where('is_validated', true);
+        })->whereHas('document', function($query) {
+            $query->whereNotNull('letter_code');
+        })->get();
+
+        return view('validations.letter_valid', compact('fullyValidatedLetters'));
+    }
     
     public function validateLetter($id, Request $request)
     {
