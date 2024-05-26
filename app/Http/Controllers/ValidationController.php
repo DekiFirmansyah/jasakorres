@@ -24,8 +24,12 @@ class ValidationController extends Controller
     }
 
     
-    public function validateLetter($id)
+    public function validateLetter($id, Request $request)
     {
+        $request->validate([
+            'notes' => 'nullable|string'
+        ]);
+        
         $letter = Letter::findOrFail($id);
         $user = Auth::user();
 

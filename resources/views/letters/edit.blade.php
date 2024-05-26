@@ -69,8 +69,8 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="validators">{{__(" Validators")}}</label>
-                                    <select name="validators[]" id="validators" class="form-control select2bs4" multiple
-                                        required>
+                                    <select name="validators[]" id="validators" class="form-control select2bs4"
+                                        multiple>
                                         @foreach($validators as $validator)
                                         <option value="{{ $validator->id }}"
                                             {{ in_array($validator->id, $letter->validators->pluck('id')->toArray()) ? 'selected' : '' }}>
