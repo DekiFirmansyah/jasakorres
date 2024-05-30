@@ -45,6 +45,12 @@
                                             <textarea name="notes" id="notes" class="form-control" rows="3"
                                                 placeholder="Here can be letter notes"></textarea>
                                         </div>
+                                        <label for="File SUrat">{{__(" File Surat")}}</label>
+                                        <div class="input-group">
+                                            <input type="file" name="file" class="form-control" id="file">
+                                            <label class="input-group-text" for="file">Upload</label>
+                                            @include('alerts.feedback', ['field' => 'file'])
+                                        </div>
                                         <button type="submit" class="btn btn-primary">Validasi</button>
                                         <a href="{{ asset('storage/' . $letter->document->file) }}" target="_blank"
                                             class="btn btn-info pull-right">Lihat Dokumen</a>

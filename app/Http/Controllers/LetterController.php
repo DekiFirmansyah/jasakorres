@@ -13,6 +13,7 @@ use App\Models\User;
 use App\Models\Validation;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
+use App\Notifications\LetterValidationNotification;
 
 class LetterController extends Controller
 {
@@ -43,19 +44,8 @@ class LetterController extends Controller
      */
     public function create()
     {
-        $currentUser = Auth::user();
     
-        $validators = collect();
-
-        if (!$currentUser->hasRole('secretary')) {
-            $validators = User::role('secretary')
-                ->where('id', '!=', $currentUser->id)
-                ->get();
-        } else {
-            $validators = User::role(['director', 'manager'])
-                ->where('id', '!=', $currentUser->id)
-                ->get();
-        }
+        $validators = User::role(['director', 'manager', 'secretary'])->get();
             
         return view('letters.create', compact('validators'));
     }
@@ -89,12 +79,24 @@ class LetterController extends Controller
             'document_id' => $file->id,
         ]);
 
-        // Tambahkan validator
+        $creator = Auth::user();
+
+        // Tentukan peran tujuan pertama berdasarkan peran pembuat surat
+        $firstRoleToNotify = $creator->hasRole('secretary') ? 'manager' : 'secretary';
+
+        // Tambahkan validator dan kirim notifikasi
         foreach ($request->validators as $validatorId) {
             $letter->validations()->create([
                 'user_id' => $validatorId,
                 'is_validated' => false,
             ]);
+
+            // Kirim notifikasi ke validator pertama yang memiliki peran yang sesuai
+            $validator = User::find($validatorId);
+            if ($validator->hasRole($firstRoleToNotify)) {
+                $validator->notify(new LetterValidationNotification($letter));
+                $firstRoleToNotify = null; // Pastikan hanya satu notifikasi pertama yang dikirim
+            }
         }
 
         // Redirect with a success message
@@ -182,6 +184,12 @@ class LetterController extends Controller
         ]);
 
         $letter->validators()->sync($request->validators);
+
+        // Kirim notifikasi ke validator baru
+        foreach ($request->validators as $validatorId) {
+            $validator = User::find($validatorId);
+            $validator->notify(new LetterValidationNotification($letter));
+        }
 
         // Redirect with a success message
         return redirect()->route('letters.index')->with('status', 'Letter updated successfully');
