@@ -38,7 +38,43 @@
                     </a>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown"
+                    <a id="notificationDropdown" class="nav-link dropdown-toggle" href="#" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                        <i class="far fa-bell"></i>
+                        @if (Auth::user()->unreadNotifications->count())
+                        <span class="badge badge-danger">{{ Auth::user()->unreadNotifications->count() }}</span>
+                        @endif
+                    </a>
+
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="notificationDropdown">
+                        @if (Auth::user()->unreadNotifications->count())
+                        <div class="dropdown-header d-flex justify-content-between align-items-center">
+                            <span>Notifikasi Baru</span>
+                            <button id="mark-all-read" class="btn btn-link btn-sm p-0">
+                                <i class="fas fa-check-circle"></i> Mark All as Read
+                            </button>
+                        </div>
+                        @foreach (Auth::user()->unreadNotifications as $notification)
+                        <a class="dropdown-item d-flex align-items-center" href="{{ url('/validations/') }}">
+                            <div class="mr-3">
+                                <div class="icon-circle bg-primary">
+                                    <i class="fas fa-file-alt text-white"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <span class="font-weight-bold">{{ $notification->data['title'] }}</span><br>
+                                <small class="text-muted">{{ $notification->data['about'] }}</small>
+                            </div>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        @endforeach
+                        <a class="dropdown-item text-center small text-gray-500" href="{{ url('/validations/') }}">Lihat
+                            Semua Validasi</a>
+                        @else
+                        <a class="dropdown-item text-center" href="#">Tidak ada notifikasi baru</a>
+                        @endif
+                    </div>
+                    <!-- <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
                         <i class="now-ui-icons location_world"></i>
                         <p>
@@ -49,7 +85,7 @@
                         <a class="dropdown-item" href="#">{{ __("Action") }}</a>
                         <a class="dropdown-item" href="#">{{ __("Another action") }}</a>
                         <a class="dropdown-item" href="#">{{ __("Something else here") }}</a>
-                    </div>
+                    </div> -->
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown"

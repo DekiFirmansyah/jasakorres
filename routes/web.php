@@ -24,4 +24,5 @@ Route::group(['middleware' => 'auth', 'namespace' => 'App\Http\Controllers'], fu
         Route::post('/validations/{letter}/validate', 'validateLetter')->name('validations.validate');
     });
 	Route::get('{page}', 'PageController@index')->name('page.index');
+    Route::post('/markAsRead', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
 });
