@@ -46,7 +46,7 @@ return new class extends Migration
         Schema::create('user_details', function (Blueprint $table) {
             $table->id();
             $table->string('nip');
-            $table->string('jabatan');
+            $table->string('posision');
             $table->string('photo')->nullable();
             $table->text('description')->nullable();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
@@ -60,10 +60,10 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('user_details');
         Schema::dropIfExists('users');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
         Schema::dropIfExists('divisions');
-        Schema::dropIfExists('user_details');
     }
 };
