@@ -23,7 +23,7 @@ class RolesTableSeeder extends Seeder
                 'guard_name' => 'web'
             ],
             [
-                'name' => 'staff',
+                'name' => 'officer',
                 'guard_name' => 'web'
             ],
             [
@@ -31,7 +31,15 @@ class RolesTableSeeder extends Seeder
                 'guard_name' => 'web'
             ],
             [
-                'name' => 'director',
+                'name' => 'general-manager',
+                'guard_name' => 'web'
+            ],
+            [
+                'name' => 'general-director',
+                'guard_name' => 'web'
+            ],
+            [
+                'name' => 'executive-director',
                 'guard_name' => 'web'
             ],
         ];

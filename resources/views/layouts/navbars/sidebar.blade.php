@@ -57,7 +57,7 @@
                 </a>
             </li>
             @endhasanyrole
-            @hasanyrole('staff|secretary|manager')
+            @hasanyrole('officer|secretary|manager')
             <li class="@if ($activePage == 'letters') active @endif">
                 <a href="{{ route('letters.index') }}">
                     <i class="now-ui-icons education_paper"></i>
@@ -65,7 +65,7 @@
                 </a>
             </li>
             @endhasanyrole
-            @hasanyrole('secretary|manager|director')
+            @hasanyrole('secretary|manager|general-manager|general-director|executive-director')
             <li class="@if ($activePage == 'validations') active @endif">
                 <a href="{{ route('validations.index') }}">
                     <i class="now-ui-icons ui-1_bell-53"></i>
@@ -73,7 +73,7 @@
                 </a>
             </li>
             @endhasanyrole
-            @hasanyrole('director')
+            @hasanyrole('general-manager|general-director|executive-director')
             <li class="@if ($activePage == 'letterValids') active @endif">
                 <a href="{{ route('validations.valid') }}">
                     <i class="now-ui-icons education_paper"></i>
@@ -81,15 +81,21 @@
                 </a>
             </li>
             @endhasanyrole
-            <!-- @hasanyrole('secretary')
-            <li class="@if ($activePage == 'maps') active @endif">
-                <a href="{{ route('page.index','maps') }}">
+            @hasanyrole('secretary')
+            <li class="@if ($activePage == 'agenda') active @endif">
+                <a href="{{ route('home') }}">
                     <i class="now-ui-icons location_map-big"></i>
-                    <p>{{ __('Maps') }}</p>
+                    <p>{{ __('Agenda Surat') }}</p>
+                </a>
+            </li>
+            <li class="@if ($activePage == 'arsip') active @endif">
+                <a href="{{ route('home') }}">
+                    <i class="now-ui-icons design_bullet-list-67"></i>
+                    <p>{{ __('Arsip Surat') }}</p>
                 </a>
             </li>
             @endhasanyrole
-            <li class=" @if ($activePage == 'notifications') active @endif">
+            <!-- <li class=" @if ($activePage == 'notifications') active @endif">
                 <a href="{{ route('page.index','notifications') }}">
                     <i class="now-ui-icons ui-1_bell-53"></i>
                     <p>{{ __('Notifications') }}</p>
