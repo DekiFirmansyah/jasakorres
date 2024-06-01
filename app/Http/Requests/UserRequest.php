@@ -41,6 +41,15 @@ class UserRequest extends FormRequest
             'password_confirmation' => [
                 'min:6'
             ],
+            'nip' => [
+                'required', 'string'
+            ],
+            'posision' => [
+                'required', 'string'
+            ],
+            'division_id' => [
+                'required'
+            ],
         ];
     }
 }

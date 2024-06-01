@@ -24,7 +24,7 @@
                         <div class="row">
                         </div>
                         <div class="row">
-                            <div class="col-md-7 pr-1">
+                            <div class="col-md-6 pr-1">
                                 <div class="form-group">
                                     <label>{{__(" Name")}}</label>
                                     <input type="text" name="name" class="form-control" placeholder="Name"
@@ -32,9 +32,7 @@
                                     @include('alerts.feedback', ['field' => 'name'])
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-7 pr-1">
+                            <div class="col-md-6 pl-1">
                                 <div class="form-group">
                                     <label>{{__(" Username")}}</label>
                                     <input type="text" name="username" class="form-control" placeholder="Username"
@@ -44,12 +42,31 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-7 pr-1">
+                            <div class="col-md-6 pr-1">
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">{{__(" Email address")}}</label>
                                     <input type="email" name="email" class="form-control" placeholder="Email"
                                         value="{{ old('email', auth()->user()->email) }}">
                                     @include('alerts.feedback', ['field' => 'email'])
+                                </div>
+                            </div>
+                            <div class="col-md-6 pl-1">
+                                <label for="Foto Profil">{{__(" Foto Profil")}}</label>
+                                <div class="input-group">
+                                    <input type="file" name="photo" class="form-control" id="photo">
+                                    <label class="input-group-text" for="photo">Upload</label>
+                                    @include('alerts.feedback', ['field' => 'photo'])
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-8 pr-1">
+                                <div class="form-group">
+                                    <label>Quotes</label>
+                                    <textarea rows="4" cols="80" class="form-control" id="description"
+                                        name="description"
+                                        placeholder="Here can be quotes">{{ old('description', auth()->user()->userDetail->description) }}</textarea>
+                                    @include('alerts.feedback', ['field' => 'description'])
                                 </div>
                             </div>
                         </div>
@@ -111,12 +128,13 @@
                 </div>
                 <div class="card-body">
                     <div class="author">
-                        <a href="#">
-                            <img class="avatar border-gray" src="{{asset('assets')}}/img/default-avatar.png" alt="...">
-                            <h5 class="title">{{ auth()->user()->name }}</h5>
-                        </a>
+                        <img class="avatar border-gray"
+                            src="{{ auth()->user()->userDetail->photo ? asset('storage/' . auth()->user()->userDetail->photo) : asset('assets/img/default-avatar.png') }}"
+                            alt="...">
+                        <h5 class="title">{{ auth()->user()->name }}</h5>
+                        <h7> {{ auth()->user()->userDetail->nip }} - {{ auth()->user()->userDetail->posision }} </h7>
                         <p class="description">
-                            {{ auth()->user()->email }}
+                            {{ auth()->user()->userDetail->description }}
                         </p>
                     </div>
                 </div>

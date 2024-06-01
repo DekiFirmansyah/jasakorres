@@ -25,19 +25,23 @@
                     </div>
                     <table id="datatable" class="table table-striped table-bordered" cellspacing="0" width="100%">
                         <thead>
-                            <tr>
+                            <tr style="text-align: center;">
                                 <th style="width: 20px;">No</th>
-                                <th>Name</th>
-                                <th>Username</th>
+                                <th>Nama</th>
+                                <th>NIP</th>
+                                <th>Divisi</th>
+                                <th>Jabatan</th>
                                 <th>Role</th>
                                 <th class="disabled-sorting text-right">Actions</th>
                             </tr>
                         </thead>
                         <tfoot>
-                            <tr>
+                            <tr style="text-align: center;">
                                 <th>No</th>
-                                <th>Name</th>
-                                <th>Username</th>
+                                <th>Nama</th>
+                                <th>NIP</th>
+                                <th>Divisi</th>
+                                <th>Jabatan</th>
                                 <th>Role User</th>
                                 <th class="disabled-sorting text-right">Actions</th>
                             </tr>
@@ -47,8 +51,10 @@
                             <tr>
                                 <td>{{ $key+1 }}</td>
                                 <td>{{ $user->name }}</td>
-                                <td>{{ $user->username }}</td>
-                                <td>
+                                <td>{{ $user->userDetail->nip }}</td>
+                                <td>{{ $user->userDetail->division->name }}</td>
+                                <td>{{ $user->userDetail->posision }}</td>
+                                <td class="text-center">
                                     @foreach($user->roles as $key => $item)
                                     <span class="badge bg-info">{{ $item->name }}</span>
                                     @endforeach

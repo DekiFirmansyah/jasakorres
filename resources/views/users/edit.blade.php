@@ -51,13 +51,54 @@
                             </div>
                             <div class="col-md-6 pl-1">
                                 <div class="form-group">
-                                    <label for="roles">{{__(" Roles")}}</label>
+                                    <label for="roles">{{ __("Roles") }}</label>
                                     <select class="form-control select2bs4" style="width: 100%;" id="roles" name="roles"
                                         value="{{ $roles }}">
-                                        @foreach($roles as $v)
-                                        <option value="{{ $v }}">{{ $v }}</option>
+                                        @foreach($roles as $role)
+                                        <option value="{{ $role }}"
+                                            {{ $user->roles->pluck('name')->contains($role) ? 'selected' : '' }}>
+                                            {{ $role }}
+                                        </option>
                                         @endforeach
                                     </select>
+                                    @include('alerts.feedback', ['field' => 'roles'])
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 pr-1">
+                                <div class="form-group">
+                                    <label for="posision">{{__(" Jabatan")}}</label>
+                                    <input type="text" class="form-control" id="posision" name="posision"
+                                        value="{{ old('posision', $user->userDetail->posision) }}"
+                                        placeholder="Jabatan">
+                                    @include('alerts.feedback', ['field' => 'posision'])
+                                </div>
+                            </div>
+                            <div class="col-md-6 pl-1">
+                                <div class="form-group">
+                                    <label for="nip">{{__(" NIP")}}</label>
+                                    <input type="text" class="form-control" id="nip" name="nip"
+                                        value="{{ old('nip', $user->userDetail->nip) }}"
+                                        placeholder="Nomor Induk Pegawai">
+                                    @include('alerts.feedback', ['field' => 'nip'])
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 pr-1">
+                                <div class="form-group">
+                                    <label for="division">{{__(" Divisi")}}</label>
+                                    <select class="form-control select2bs4" style="width: 100%;" id="division_id"
+                                        name="division_id">
+                                        @foreach($divisions as $v)
+                                        <option value="{{ $v->id }}"
+                                            {{ $v->id == $user->userDetail->division_id ? 'selected' : '' }}>
+                                            {{ $v->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @include('alerts.feedback', ['field' => 'division_id'])
                                 </div>
                             </div>
                         </div>

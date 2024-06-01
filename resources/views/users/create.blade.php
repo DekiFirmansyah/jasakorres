@@ -23,7 +23,7 @@
                         <div class="row">
                             <div class="col-md-6 pr-1">
                                 <div class="form-group">
-                                    <label for="name">{{__(" Name")}}</label>
+                                    <label for="name">{{__(" Nama")}}</label>
                                     <input type="text" class="form-control" id="name" name="name"
                                         placeholder="Enter name">
                                     @include('alerts.feedback', ['field' => 'name'])
@@ -74,6 +74,37 @@
                                     <input type="password" class="form-control" id="password_confirmation"
                                         name="password_confirmation" placeholder="Confirm Password">
                                     @include('alerts.feedback', ['field' => 'password_confirmation'])
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 pr-1">
+                                <div class="form-group">
+                                    <label for="posision">{{__(" Jabatan")}}</label>
+                                    <input type="text" class="form-control" id="posision" name="posision"
+                                        placeholder="Jabatan">
+                                    @include('alerts.feedback', ['field' => 'posision'])
+                                </div>
+                            </div>
+                            <div class="col-md-6 pl-1">
+                                <div class="form-group">
+                                    <label for="nip">{{__(" NIP")}}</label>
+                                    <input type="text" class="form-control" id="nip" name="nip"
+                                        placeholder="Nomor Induk Pegawai">
+                                    @include('alerts.feedback', ['field' => 'nip'])
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 pr-1">
+                                <div class="form-group">
+                                    <label for="division">{{__(" Divisi")}}</label>
+                                    <select class="form-control select2bs4" style="width: 100%;" id="division_id"
+                                        name="division_id">
+                                        @foreach($divisions as $v)
+                                        <option value="{{ $v->id }}" selected="selected">{{ $v->name }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                         </div>
