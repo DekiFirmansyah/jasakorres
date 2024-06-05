@@ -54,7 +54,31 @@
     <!-- Now Ui Dashboard DEMO methods, don't include it in your project! -->
     <script src="{{ asset('assets') }}/demo/demo.js"></script>
     <script src="{{ asset('assets') }}/js/custom.js"></script>
+    <script>
+    document.getElementById('markAllAsRead').addEventListener('click', function() {
+        fetch('{{ route("notifications.markAsRead") }}', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-Type': 'application/json'
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update UI to reflect notifications have been read
+                    document.querySelector('.badge').innerText = '0';
+                    document.querySelectorAll('#notificationList .dropdown-item').forEach(item => {
+                        item.classList.remove('dropdown-item-info');
+                    });
+                }
+            });
+    });
 
+    function showCodeInputForm(letterId) {
+        document.getElementById('codeInputForm-' + letterId).style.display = 'block';
+    }
+    </script>
     @stack('js')
 </body>
 

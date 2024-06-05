@@ -6,10 +6,15 @@ use Illuminate\Http\Request;
 use App\Models\Letter;
 use App\Models\User;
 use App\Models\Validation;
+use App\Models\Document;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use App\Notifications\LetterValidationNotification;
+use App\Notifications\UpdateLetterNotification;
+use App\Notifications\RequestLetterCodeNotification;
+use Illuminate\Database\Eloquent\Builder;
 
 class ValidationController extends Controller
 {
@@ -19,7 +24,7 @@ class ValidationController extends Controller
         $role = $user->roles->pluck('name')->first(); // Mendapatkan role pertama user
 
         // Ambil surat yang belum divalidasi oleh user saat ini
-        $lettersToValidate = Letter::whereHas('validators', function($query) use ($user, $role) {
+        $lettersToValidate = Letter::whereHas('validators', function($query) use ($user) {
             $query->where('user_id', $user->id)->where('is_validated', false);
         })->where(function($query) use ($role) {
             if ($role == 'manager') {
@@ -29,31 +34,65 @@ class ValidationController extends Controller
                         $q2->where('name', 'secretary');
                     })->where('is_validated', true);
                 });
-            } elseif ($role == 'director') {
+            } elseif ($role == 'general-manager') {
                 // Hanya tampilkan surat yang sudah divalidasi oleh 'manager' dan 'secretary'
                 $query->whereHas('validations', function($q) {
                     $q->whereHas('user.roles', function($q2) {
                         $q2->whereIn('name', ['manager', 'secretary']);
                     })->where('is_validated', true);
                 });
+            } elseif ($role == 'general-director') {
+                // Hanya tampilkan surat yang sudah divalidasi oleh 'general-manager', 'manager' dan 'secretary'
+                $query->whereHas('validations', function($q) {
+                    $q->whereHas('user.roles', function($q2) {
+                        $q2->whereIn('name', ['general-manager', 'manager', 'secretary']);
+                    })->where('is_validated', true);
+                });
+            } elseif ($role == 'executive-director') {
+                // Hanya tampilkan surat yang sudah divalidasi oleh 'general-manager', 'manager' dan 'secretary'
+                $query->whereHas('validations', function($q) {
+                    $q->whereHas('user.roles', function($q2) {
+                        $q2->whereIn('name', ['general-director', 'general-manager', 'manager', 'secretary']);
+                    })->where('is_validated', true);
+                });
             }
         })->get();
+
         
-        return view('validations.index', compact('lettersToValidate'));
+        // Cek apakah user adalah secretary dan apakah surat sudah divalidasi oleh semua validator
+        $requestLetterCode = Letter::whereHas('document', function($query) {
+            $query->whereNull('letter_code');
+        })->whereDoesntHave('validators', function ($query) {
+            $query->where('is_validated', false); // Hanya ambil surat yang semua validatornya sudah memvalidasi
+        })->get();
+
+        return view('validations.index', compact('lettersToValidate', 'requestLetterCode'));
     }
 
+    public function updateCode(Request $request, $documentId)
+    {
+        $document = Document::findOrFail($documentId);
+        $request->validate([
+            'letter_code' => 'required|string|max:255',
+        ]);
+
+        $document->letter_code = $request->input('letter_code');
+        $document->save();
+
+        return redirect()->route('validations.index')->with('status', 'Kode surat berhasil diupdate.');
+    }
 
     public function letterValid()
     {
         $user = Auth::user();
 
         // Surat yang sudah divalidasi sepenuhnya dan memiliki letter_code pada tabel document
-        $fullyValidatedLetters = Letter::whereHas('validations', function($query) {
+         $fullyValidatedLetters = Letter::whereHas('validations', function($query) {
             $query->whereHas('user.roles', function($roleQuery) {
-                $roleQuery->where('name', 'director');
+                $roleQuery->whereIn('name', ['general-manager', 'general-director', 'executive-director']);
             })->where('is_validated', true);
-        })->whereHas('document', function($query) {
-            $query->whereNotNull('letter_code');
+        // })->whereHas('document', function($query) {
+        //     $query->whereNotNull('letter_code');
         })->get();
 
         return view('validations.letter_valid', compact('fullyValidatedLetters'));
@@ -68,9 +107,6 @@ class ValidationController extends Controller
         
         $letter = Letter::findOrFail($id);
         $user = Auth::user();
-
-        // Default validation status is false
-        // $isValidated = false;
 
         // Get the associated file path
         $filePath = $letter->document->file ?? null;
@@ -93,10 +129,16 @@ class ValidationController extends Controller
         
         // If notes or file are provided, send notification to the letter creator
         if ($request->input('notes') || $file) {
+            $letter->validators()->updateExistingPivot($user->id, [
+                'notes' => $request->input('notes')
+            ]);
+            
             $creator = $letter->user;
             if ($creator) {
-                $creator->notify(new LetterValidationNotification($letter, $request->input('notes')));
+                $creator->notify(new UpdateLetterNotification($letter));
             }
+            return redirect()->route('validations.index')
+            ->with('status', 'Surat berhasil diperbarui dan notifikasi dikirim ke pembuat surat.');
         } else {
             // Validasi surat oleh user yang login dengan catatan
             if ($letter->validators()->where('user_id', $user->id)->exists()) {
@@ -104,48 +146,79 @@ class ValidationController extends Controller
                     'is_validated' => true,
                     'notes' => $request->input('notes')
                 ]);
-                // $isValidated = true;
             }
         }
 
-        // Kirim notifikasi ke validator selanjutnya jika notes dan file kosong
         if (!$request->input('notes') && !$file) {
-            $nextValidatorId = null;
+            $nextValidator = null;
 
-            // Cek role user saat ini dan tentukan validator selanjutnya berdasarkan user_id di tabel validations
             if ($user->hasRole('secretary')) {
-                // Sekretaris validasi -> Notifikasi ke manager
-                $nextValidator = $letter->validators()->whereHas('user.roles', function($query) {
-                    $query->where('name', 'manager');
-                })->first();
+                // Sekretaris validasi -> Notifikasi ke manager atau role yang lebih tinggi jika tidak ada manager
+                $nextValidator = $this->getNextValidator($letter, ['manager', 'general-manager', 'general-director', 'executive-director']);
             } elseif ($user->hasRole('manager')) {
-                // Manager validasi -> Notifikasi ke director
-                $nextValidator = $letter->validators()->whereHas('user.roles', function($query) {
-                    $query->where('name', 'director');
-                })->first();
+                // Manager validasi -> Notifikasi ke general-manager atau role yang lebih tinggi jika tidak ada general-manager
+                $nextValidator = $this->getNextValidator($letter, ['general-manager', 'general-director', 'executive-director']);
+            } elseif ($user->hasRole('general-manager')) {
+                // General-manager validasi -> Notifikasi ke general-director atau executive-director jika tidak ada general-director
+                $nextValidator = $this->getNextValidator($letter, ['general-director', 'executive-director']);
+            } elseif ($user->hasRole('general-director')) {
+                // General-director validasi -> Notifikasi ke executive-director
+                $nextValidator = $this->getNextValidator($letter, ['executive-director']);
             }
 
-            // Jika ada validator selanjutnya, cek apakah surat sudah divalidasi oleh semua validator sebelumnya
             if ($nextValidator) {
                 $nextValidatorId = $nextValidator->user_id;
-
-                $allPreviousValidated = $letter->validators()->whereHas('user.roles', function($query) use ($user) {
-                    if ($user->hasRole('manager')) {
-                        $query->where('name', 'secretary');
-                    } elseif ($user->hasRole('director')) {
-                        $query->whereIn('name', ['manager', 'secretary']);
-                    }
-                })->where('is_validated', true)->count() > 0;
-
+            
+                $roleHierarchy = [
+                    'executive-director' => ['general-director', 'general-manager', 'manager', 'secretary'],
+                    'general-director' => ['general-manager', 'manager', 'secretary'],
+                    'general-manager' => ['manager', 'secretary'],
+                    'manager' => ['secretary'],
+                ];
+            
+                $currentUserRole = $user->roles->first()->name;
+                $previousRoles = $roleHierarchy[$currentUserRole] ?? [];
+            
+                $allPreviousValidated = $letter->validations()
+                    ->whereHas('user.roles', function ($query) use ($previousRoles) {
+                        $query->whereIn('name', $previousRoles);
+                    })
+                    ->where('is_validated', true)
+                    ->count() == count($previousRoles);
+            
                 if ($allPreviousValidated && $nextValidatorId) {
                     $nextValidatorUser = User::find($nextValidatorId);
                     if ($nextValidatorUser) {
                         $nextValidatorUser->notify(new LetterValidationNotification($letter));
                     }
                 }
+            } else {
+                // No next validator, notify the secretary to request a letter code
+                $secretary = User::whereHas('roles', function ($query) {
+                    $query->where('name', 'secretary');
+                })->first();
+            
+                if ($secretary) {
+                    $secretary->notify(new RequestLetterCodeNotification($letter));
+                }
             }
         }
 
-        return redirect()->route('validations.index')->with('success', 'Surat berhasil divalidasi.');
+        return redirect()->route('validations.index')->with('status', 'Surat berhasil divalidasi.');
+    }
+    
+    private function getNextValidator($letter, $roles)
+    {
+        foreach ($roles as $role) {
+            $nextValidator = $letter->validations()->whereHas('user.roles', function($query) use ($role) {
+                $query->where('name', $role);
+            })->first();
+
+            if ($nextValidator) {
+                return $nextValidator;
+            }
+        }
+
+        return null;
     }
 }

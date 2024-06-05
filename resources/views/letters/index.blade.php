@@ -89,6 +89,9 @@
                                                 </li>
                                                 <br>
                                                 @endforeach
+                                                <li>
+                                                    <p>Kode Surat : {{ $letter->document->letter_code }}</p>
+                                                </li>
                                             </ul>
                                         </td>
                                         <td>{{ $letter->created_at->format('d M Y') }}</td>
@@ -134,7 +137,7 @@
                                         <th>Purpose</th>
                                         <th>Validation</th>
                                         <th>Create Date</th>
-                                        <th class="disabled-sorting text-right">Actions</th>
+                                        <th class="disabled-sorting text-right" style="width: 120px;">Actions</th>
                                     </tr>
                                 </thead>
                                 <tfoot>
@@ -167,10 +170,18 @@
                                                 </li>
                                                 <br>
                                                 @endforeach
+                                                <li>
+                                                    <p>Kode Surat : {{ $letter->document->letter_code }}</p>
+                                                </li>
                                             </ul>
                                         </td>
                                         <td>{{ $letter->created_at->format('d M Y') }}</td>
                                         <td class="text-right">
+                                            <a href="{{ asset('storage/' . $letter->document->file) }}" target="_blank"
+                                                rel="tooltip" class="btn btn-info btn-icon btn-sm"
+                                                title="Lihat Dokumen">
+                                                <i class="far fa-file"></i>
+                                            </a>
                                             <a type="button" href="{{ route('letters.edit', $letter->id) }}"
                                                 rel="tooltip" class="btn btn-success btn-icon btn-sm" title="Edit">
                                                 <i class="far fa-edit"></i>

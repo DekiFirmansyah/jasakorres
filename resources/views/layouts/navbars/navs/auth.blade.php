@@ -38,42 +38,43 @@
                     </a>
                 </li>
                 <li class="nav-item dropdown">
-                    <a id="notificationDropdown" class="nav-link dropdown-toggle" href="#" role="button"
+                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                        <i class="far fa-bell"></i>
+                        <i class="now-ui-icons ui-1_bell-53"></i>
                         @if (Auth::user()->unreadNotifications->count())
                         <span class="badge badge-danger">{{ Auth::user()->unreadNotifications->count() }}</span>
                         @endif
                     </a>
 
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="notificationDropdown">
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                         @if (Auth::user()->unreadNotifications->count())
-                        <div class="dropdown-header d-flex justify-content-between align-items-center">
-                            <span>Notifikasi Baru</span>
-                            <button id="mark-all-read" class="btn btn-link btn-sm p-0">
-                                <i class="fas fa-check-circle"></i> Mark All as Read
-                            </button>
-                        </div>
-                        @foreach (Auth::user()->unreadNotifications as $notification)
-                        <a class="dropdown-item d-flex align-items-center" href="{{ url('/validations/') }}">
-                            <div class="mr-3">
-                                <div class="icon-circle bg-primary">
-                                    <i class="fas fa-file-alt text-white"></i>
+                        <h6 class="dropdown-header">Notifikasi Baru</h6>
+                        <div id="notificationList">
+                            @foreach (Auth::user()->unreadNotifications as $notification)
+                            <a class="dropdown-item d-flex align-items-center" href="{{ $notification->data['url'] }}">
+                                <div class="mr-3">
+                                    <div class="icon-circle bg-primary">
+                                        <i class="fas fa-file-alt text-white"></i>
+                                    </div>
                                 </div>
-                            </div>
-                            <div>
-                                <span class="font-weight-bold">{{ $notification->data['title'] }}</span><br>
-                                <small class="text-muted">{{ $notification->data['about'] }}</small>
-                            </div>
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        @endforeach
-                        <a class="dropdown-item text-center small text-gray-500" href="{{ url('/validations/') }}">Lihat
-                            Semua Validasi</a>
+                                <div>
+                                    <span class="font-weight-bold">{{ $notification->data['title'] }}</span><br>
+                                    <strong class="text-danger">{{ $notification->data['message'] }}</strong><br>
+                                </div>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            @endforeach
+                        </div>
+                        <a class="dropdown-item text-center small text-gray-500"
+                            href="{{ $notification->data['url'] }}">Lihat
+                            Semua Surat</a>
+                        <button id="markAllAsRead" class="dropdown-item text-center small text-gray-500"><i
+                                class="fas fa-check"></i> Tandai Semua Telah Dibaca</button>
                         @else
                         <a class="dropdown-item text-center" href="#">Tidak ada notifikasi baru</a>
                         @endif
                     </div>
+
                     <!-- <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
                         <i class="now-ui-icons location_world"></i>

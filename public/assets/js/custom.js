@@ -9,22 +9,6 @@ $(".toggle-password").click(function() {
     }
   });
 
-  $(document).ready(function() {
-    $('#notificationDropdown').on('click', function() {
-        // Mark notifications as read when dropdown is opened
-        $.ajax({
-            url: '/markAsRead',
-            type: 'POST',
-            data: {
-                _token: '{{ csrf_token() }}'
-            },
-            success: function() {
-                console.log('All notifications marked as read.');
-            }
-        });
-    });
-  });
-
 function confirmDelete(letterId) {
   Swal.fire({
       title: 'Apakah Anda yakin?',

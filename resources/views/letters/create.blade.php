@@ -53,7 +53,8 @@
                                     <select name="validators[]" id="validators" class="form-control select2bs4" multiple
                                         required>
                                         @foreach($validators as $validator)
-                                        <option value="{{ $validator->id }}">{{ $validator->name }}</option>
+                                        <option value="{{ $validator->id }}">{{ $validator->name }} -
+                                            {{ $validator->userDetail->posision }}</option>
                                         @endforeach
                                     </select>
                                     @include('alerts.feedback', ['field' => 'validators'])

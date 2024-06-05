@@ -26,7 +26,7 @@ class LetterController extends Controller
 
         $letters = Letter::with('validators')->where('user_id', $user->id)->get();
         
-        $fullyValidatedLetters = Letter::whereHas('validators', function($query) {
+        $fullyValidatedLetters = Letter::where('user_id', $user->id)->whereHas('validators', function($query) {
             $query->where('is_validated', true);
         }, '=', function ($query) {
             $query->selectRaw('COUNT(*)')
@@ -45,7 +45,7 @@ class LetterController extends Controller
     public function create()
     {
     
-        $validators = User::role(['director', 'manager', 'secretary'])->get();
+        $validators = User::role(['executive-director', 'general-director', 'general-manager', 'manager', 'secretary'])->get();
             
         return view('letters.create', compact('validators'));
     }
@@ -93,7 +93,7 @@ class LetterController extends Controller
 
             // Kirim notifikasi ke validator pertama yang memiliki peran yang sesuai
             $validator = User::find($validatorId);
-            if ($validator->hasRole($firstRoleToNotify)) {
+            if (is_string($firstRoleToNotify) && $validator->hasRole($firstRoleToNotify)) {
                 $validator->notify(new LetterValidationNotification($letter));
                 $firstRoleToNotify = null; // Pastikan hanya satu notifikasi pertama yang dikirim
             }
@@ -121,36 +121,9 @@ class LetterController extends Controller
     public function edit(string $id)
     {
         // Find the letter by its ID
-        $letter = Letter::with('document')->findOrFail($id);
-        
-        // Ambil validator dengan role 'secretary' yang sudah valid
-        $secretaryValidated = Validation::where('letter_id', $id)
-        ->whereHas('user.roles', function($q) {
-            $q->where('name', 'secretary');
-        })
-        ->where('is_validated', true)
-        ->exists();
+        $letter = Letter::with('document', 'validators')->findOrFail($id);
 
-        $managerValidated = Validation::where('letter_id', $id)
-        ->whereHas('user.roles', function($q) {
-            $q->where('name', 'manager');
-        })
-        ->where('is_validated', true)
-        ->exists();
-
-        // Jika ada validator 'secretary' yang sudah valid, tambahkan validator dengan role 'manager'
-        if ($secretaryValidated) {
-            if ($managerValidated) {
-                $validators = User::role(['manager', 'director', 'secretary'])->get();
-            } else {
-                $validators = User::role(['manager', 'secretary'])->get();
-            }
-        } else {
-            // Jika tidak ada, tampilkan hanya validator dengan role 'secretary'
-            $validators = User::role('secretary')->get();
-        }
-
-        return view('letters.edit', compact('letter', 'validators'));
+        return view('letters.edit', compact('letter'));
     }
 
     /**
@@ -183,17 +156,28 @@ class LetterController extends Controller
             'file' => $filePath,
         ]);
 
-        $letter->validators()->sync($request->validators);
+        // Array of roles in hierarchical order
+        $rolesHierarchy = ['secretary', 'manager', 'general-manager', 'general-director', 'executive-director'];
 
-        // Kirim notifikasi ke validator baru
-        foreach ($request->validators as $validatorId) {
-            $validator = User::find($validatorId);
-            $validator->notify(new LetterValidationNotification($letter));
+        // Find all validators who haven't validated the letter yet
+        $validators = $letter->validations()->where('is_validated', false)->with('user')->get();
+
+        // Check each role in the hierarchy to find the next validator
+        foreach ($rolesHierarchy as $role) {
+            $nextValidator = $validators->filter(function($validator) use ($role) {
+                return $validator->user->hasRole($role);
+            })->first();
+
+            // If the next validator exists, send notification
+            if ($nextValidator) {
+                $nextValidator->user->notify(new LetterValidationNotification($letter));
+                break; // Stop after sending notification to the first found next validator
+            }
         }
-
         // Redirect with a success message
         return redirect()->route('letters.index')->with('status', 'Letter updated successfully');
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -203,21 +187,22 @@ class LetterController extends Controller
         // Find the letter by its ID
         $letter = Letter::findOrFail($id);
         
-        // Get the associated file
-        $filePath = $letter->file->file ?? null;
+        // Get the associated file, if available
+        $file = optional($letter->document)->file;
         
         // Delete the file from storage if it exists
-        if ($filePath && Storage::disk('public')->exists($filePath)) {
-            Storage::disk('public')->delete($filePath);
+        if ($file && Storage::disk('public')->exists($file)) {
+            Storage::disk('public')->delete($file);
+            
+            // Delete the associated Document record
+            $letter->document->delete();
         }
-        
-        // Delete the associated Document record
-        $letter->file->delete();
         
         // Delete the letter
         $letter->delete();
 
         // Redirect with a success message
-        return redirect()->route('letter.index')->with('status', 'Letter deleted successfully');
+        return back()->withStatus(__('Letter deleted successfully'));
     }
+
 }

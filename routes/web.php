@@ -22,7 +22,8 @@ Route::group(['middleware' => 'auth', 'namespace' => 'App\Http\Controllers'], fu
         Route::get('/validations', 'index')->name('validations.index');
         Route::get('/letter-valid', 'letterValid')->name('validations.valid');
         Route::post('/validations/{letter}/validate', 'validateLetter')->name('validations.validate');
+        Route::post('/validations/{document}/update-code', 'updateCode')->name('letters.updateCode');
     });
 	Route::get('{page}', 'PageController@index')->name('page.index');
-    Route::post('/markAsRead', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
+    Route::post('/notifications/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
 });

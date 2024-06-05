@@ -71,7 +71,7 @@
                                     <label for="validators">{{__(" Validators")}}</label>
                                     <select name="validators[]" id="validators" class="form-control select2bs4"
                                         multiple>
-                                        @foreach($validators as $validator)
+                                        @foreach($letter->validators as $validator)
                                         <option value="{{ $validator->id }}"
                                             {{ in_array($validator->id, $letter->validators->pluck('id')->toArray()) ? 'selected' : '' }}>
                                             {{ $validator->name }}
