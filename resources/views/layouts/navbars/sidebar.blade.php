@@ -82,14 +82,14 @@
             </li>
             @endhasanyrole
             @hasanyrole('secretary')
-            <li class="@if ($activePage == 'agenda') active @endif">
-                <a href="{{ route('home') }}">
+            <li class="@if ($activePage == 'notebooks') active @endif">
+                <a href="{{ route('notebooks.index') }}">
                     <i class="now-ui-icons location_map-big"></i>
                     <p>{{ __('Agenda Surat') }}</p>
                 </a>
             </li>
             <li class="@if ($activePage == 'arsip') active @endif">
-                <a href="{{ route('home') }}">
+                <a href="{{ route('archives.index') }}">
                     <i class="now-ui-icons design_bullet-list-67"></i>
                     <p>{{ __('Arsip Surat') }}</p>
                 </a>
