@@ -146,15 +146,22 @@ class LetterController extends Controller
             // Store the new file
             $fileName = Str::random(20) . '.' . $file->getClientOriginalExtension();
             $filePath = Storage::disk('public')->putFileAs('document', $file, $fileName);
-        }
+            // Update the associated Document record
+            $letter->document->update([
+                'file' => $filePath,
+            ]);
 
-        // Update the letter data
-        $letter->update($request->only(['title', 'about', 'purpose', 'description']));
-        
-        // Update the associated Document record
-        $letter->document->update([
-            'file' => $filePath,
-        ]);
+            // Update the updated_at field in the letters table
+            $letter->touch();
+        } else {
+            // Update the letter data without changing the file
+            $letter->update($request->only(['title', 'about', 'purpose', 'description']));
+            
+            // Update the associated Document record if no new file is uploaded
+            $letter->document->update([
+                'file' => $filePath,
+            ]);
+        }
 
         // Array of roles in hierarchical order
         $rolesHierarchy = ['secretary', 'manager', 'general-manager', 'general-director', 'executive-director'];

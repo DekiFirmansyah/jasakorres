@@ -62,6 +62,7 @@ class UserController extends Controller
             'nip' => $input['nip'],
             'posision' => $input['posision'],
             'user_id' => $user->id,
+            'division_id' => $input['division_id']
         ]);
 
         // Ambil divisi berdasarkan ID

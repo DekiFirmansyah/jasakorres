@@ -31,7 +31,7 @@ class UpdateLetterRequest extends FormRequest
             'description' => 'nullable|string',
             // 'letter_code' => 'nullable|string|unique:letter_files,letter_code,' . $id,
             // 'validators' => 'required|array',
-            'file' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
+            'file' => 'nullable|file|mimes:pdf,doc,docx|max:10000',
         ];
     }
 }

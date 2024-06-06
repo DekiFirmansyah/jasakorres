@@ -55,7 +55,7 @@
                                         <th>About</th>
                                         <th>Purpose</th>
                                         <th>Validation</th>
-                                        <th>Create Date</th>
+                                        <th>Date</th>
                                         <th class="disabled-sorting text-right">Actions</th>
                                     </tr>
                                 </thead>
@@ -136,7 +136,7 @@
                                         <th>About</th>
                                         <th>Purpose</th>
                                         <th>Validation</th>
-                                        <th>Create Date</th>
+                                        <th>Date</th>
                                         <th class="disabled-sorting text-right" style="width: 120px;">Actions</th>
                                     </tr>
                                 </thead>
@@ -175,7 +175,7 @@
                                                 </li>
                                             </ul>
                                         </td>
-                                        <td>{{ $letter->created_at->format('d M Y') }}</td>
+                                        <td>{{ $letter->updated_at->format('d M Y') }}</td>
                                         <td class="text-right">
                                             <a href="{{ asset('storage/' . $letter->document->file) }}" target="_blank"
                                                 rel="tooltip" class="btn btn-info btn-icon btn-sm"
