@@ -51,4 +51,9 @@ class RequestLetterCodeNotification extends Notification
             'title' => $this->letter->title,
         ]);
     }
+
+    public function broadcastOn()
+    {
+        return ['request-letter-code'];
+    }
 }

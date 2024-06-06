@@ -42,4 +42,9 @@ class Letter extends Model
         return $this->belongsToMany(User::class, 'validations', 'letter_id', 'user_id')
                     ->withPivot('is_validated', 'notes');
     }
+
+    public function notebook()
+    {
+        return $this->hasMany(Notebook::class);
+    }
 }

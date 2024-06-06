@@ -39,8 +39,8 @@
                                             {{ $letter->purpose }}</small>
                                     </p>
 
-                                    @if($letter->document && $letter->document->file_path)
-                                    <a href="{{ asset('storage/' . $letter->document->file_path) }}" target="_blank"
+                                    @if($letter->document && $letter->document->file)
+                                    <a href="{{ asset('storage/' . $letter->document->file) }}" target="_blank"
                                         class="btn btn-primary">Lihat Dokumen</a>
                                     @else
                                     <span class="text-danger">Dokumen tidak tersedia</span>

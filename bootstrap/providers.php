@@ -5,4 +5,5 @@ return [
     App\Providers\AuthServiceProvider::class,
     LaravelFrontendPresets\NowUiPreset\NowUiPresetServiceProvider::class,
     Barryvdh\DomPDF\ServiceProvider::class,
+    App\Providers\BroadcastServiceProvider::class,
 ];

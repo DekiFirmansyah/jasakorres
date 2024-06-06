@@ -51,4 +51,9 @@ class UpdateLetterNotification extends Notification
             'title' => $this->letter->title,
         ]);
     }
+
+    public function broadcastOn()
+    {
+        return ['update-letter'];
+    }
 }

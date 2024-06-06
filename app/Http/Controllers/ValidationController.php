@@ -79,6 +79,11 @@ class ValidationController extends Controller
         $document->letter_code = $request->input('letter_code');
         $document->save();
 
+        if ($document->letter) {
+            $document->letter->updated_at = now();
+            $document->letter->save();
+        }
+
         return redirect()->route('validations.index')->with('status', 'Kode surat berhasil diupdate.');
     }
 
@@ -91,8 +96,8 @@ class ValidationController extends Controller
             $query->whereHas('user.roles', function($roleQuery) {
                 $roleQuery->whereIn('name', ['general-manager', 'general-director', 'executive-director']);
             })->where('is_validated', true);
-        // })->whereHas('document', function($query) {
-        //     $query->whereNotNull('letter_code');
+        })->whereHas('document', function($query) {
+            $query->whereNotNull('letter_code');
         })->get();
 
         return view('validations.letter_valid', compact('fullyValidatedLetters'));
