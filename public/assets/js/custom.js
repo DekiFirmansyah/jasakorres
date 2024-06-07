@@ -41,3 +41,21 @@ document.addEventListener('DOMContentLoaded', (event) => {
 $(document).ready(function() {
   $('.select2bs4').select2();
 });
+
+window.Echo.channel('letter-validation')
+    .listen('LetterValidationNotification', (e) => {
+        console.log('Notification received:', e);
+        // You can update your UI or show a toast notification here
+    });
+
+window.Echo.channel('request-letter-code')
+    .listen('RequestLetterCodeNotification', (e) => {
+        console.log('Notification received:', e);
+        // You can update your UI or show a toast notification here
+    });
+
+window.Echo.channel('update-letter')
+    .listen('UpdateLetterNotification', (e) => {
+        console.log('Notification received:', e);
+        // You can update your UI or show a toast notification here
+    });

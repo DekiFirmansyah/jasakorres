@@ -47,10 +47,11 @@
     <!--  Google Maps Plugin    -->
     <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
     <!-- Chart JS -->
-    <script src="{{ asset('assets') }}/js/plugins/chartjs.min.js"></script>
+    <!-- <script src="{{ asset('assets') }}/js/plugins/chartjs.min.js"></script> -->
     <!--  Notifications Plugin    -->
     <script src="{{ asset('assets') }}/js/plugins/bootstrap-notify.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Control Center for Now Ui Dashboard: parallax effects, scripts for the example pages etc -->
     <script src="{{ asset('assets') }}/js/now-ui-dashboard.min.js?v=1.3.0" type="text/javascript"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>

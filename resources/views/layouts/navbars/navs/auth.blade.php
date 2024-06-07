@@ -18,7 +18,7 @@
             <span class="navbar-toggler-bar navbar-kebab"></span>
         </button>
         <div class="collapse navbar-collapse justify-content-end" id="navigation">
-            <form>
+            <!-- <form>
                 <div class="input-group no-border">
                     <input type="text" value="" class="form-control" placeholder="Search...">
                     <div class="input-group-append">
@@ -27,16 +27,16 @@
                         </div>
                     </div>
                 </div>
-            </form>
+            </form> -->
             <ul class="navbar-nav">
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a class="nav-link" href="#pablo">
                         <i class="now-ui-icons media-2_sound-wave"></i>
                         <p>
                             <span class="d-lg-none d-md-block">{{ __("Stats") }}</span>
                         </p>
                     </a>
-                </li>
+                </li> -->
                 <li class="nav-item dropdown">
                     <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
