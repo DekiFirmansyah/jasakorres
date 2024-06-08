@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\Letter;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
@@ -31,8 +32,9 @@ class HomeController extends Controller
         $formattedData = $this->getLettersPerMonth();
         $divisionData = $this->getLettersPerDivision();
         $performanceData = $this->getPerformance();
+        $usersPerDivisionData = $this->getUsersPerDivision();
 
-        return view('home', compact('formattedData', 'divisionData', 'year', 'performanceData'));
+        return view('home', compact('formattedData', 'divisionData', 'year', 'performanceData', 'usersPerDivisionData'));
     }
 
     private function getLettersPerMonth()
@@ -86,5 +88,22 @@ class HomeController extends Controller
         ];
 
         return $performanceData;
+    }
+
+    private function getUsersPerDivision()
+    {
+        $usersPerDivision = User::select(DB::raw('COUNT(users.id) as count'), 'divisions.name as division')
+            ->join('user_details', 'users.id', '=', 'user_details.user_id')
+            ->join('divisions', 'user_details.division_id', '=', 'divisions.id')
+            ->groupBy('divisions.name')
+            ->get();
+
+        // Format data untuk digunakan di Chart.js
+        $divisionData = [
+            'divisions' => $usersPerDivision->pluck('division'),
+            'counts' => $usersPerDivision->pluck('count')
+        ];
+
+        return $divisionData;
     }
 }

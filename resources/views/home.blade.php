@@ -76,23 +76,23 @@
         <div class="col-lg-4 col-md-6">
             <div class="card card-chart">
                 <div class="card-header">
-                    <h5 class="card-category">Surat {{ $year }}</h5>
-                    <h4 class="card-title">Data Setiap Divisi</h4>
+                    <h5 class="card-category">Data Per Divisi</h5>
+                    <h4 class="card-title">Jumlah User Sistem</h4>
                 </div>
                 <div class="card-body">
                     <div class="chart-area">
-                        <canvas id="divisionLettersChart"></canvas>
+                        <canvas id="usersPerDivisionChart"></canvas>
                     </div>
                 </div>
                 <div class="card-footer">
                     <div class="stats">
-                        <i class="now-ui-icons ui-2_time-alarm"></i> data 1 tahun
+                        <i class="now-ui-icons ui-2_time-alarm"></i> data terbaru
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="row">
+    <!-- <div class="row">
         <div class="col-md-6">
             <div class="card  card-tasks">
                 <div class="card-header ">
@@ -288,7 +288,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 </div>
 @endsection
 
@@ -575,7 +575,7 @@ document.addEventListener('DOMContentLoaded', function() {
         options: gradientChartOptionsConfigurationWithNumbersAndGrid
     });
 
-    var e = document.getElementById("divisionLettersChart").getContext("2d");
+    var e = document.getElementById("usersPerDivisionChart").getContext("2d");
 
     gradientFill = ctx.createLinearGradient(0, 170, 0, 50);
     gradientFill.addColorStop(0, "rgba(128, 182, 244, 0)");
@@ -584,10 +584,10 @@ document.addEventListener('DOMContentLoaded', function() {
     var a = {
         type: "bar",
         data: {
-            labels: @json($divisionData['divisions']),
+            labels: @json($usersPerDivisionData['divisions']),
             datasets: [{
-                label: 'Jumlah Surat',
-                data: @json($divisionData['counts']),
+                label: 'Jumlah User',
+                data: @json($usersPerDivisionData['counts']),
                 backgroundColor: gradientFill,
                 borderColor: "#2CA8FF",
                 pointBorderColor: "#FFF",
