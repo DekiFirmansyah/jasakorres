@@ -7,7 +7,7 @@
             <img src="{{ asset('assets') }}/img/logo-jpt.png" alt="CT" />
         </a>
         <a href="" class="simple-text logo-normal">
-            {{ __('E-Surat JPT') }}
+            {{ __('JASAKORRES') }}
         </a>
     </div>
     <div class="sidebar-wrapper" id="sidebar-wrapper">
@@ -46,14 +46,14 @@
             <li class="@if ($activePage == 'profile') active @endif">
                 <a href="{{ route('profile.edit') }}">
                     <i class="now-ui-icons users_single-02"></i>
-                    <p> {{ __("User Profile") }} </p>
+                    <p> {{ __("Profil User") }} </p>
                 </a>
             </li>
             @hasanyrole('admin')
             <li class="@if ($activePage == 'users') active @endif">
                 <a href="{{ route('user.index') }}">
                     <i class="now-ui-icons design_bullet-list-67"></i>
-                    <p> {{ __("User Management") }} </p>
+                    <p> {{ __("Manajemen User") }} </p>
                 </a>
             </li>
             @endhasanyrole
@@ -88,7 +88,7 @@
                     <p>{{ __('Agenda Surat') }}</p>
                 </a>
             </li>
-            <li class="@if ($activePage == 'arsip') active @endif">
+            <li class="@if ($activePage == 'archives') active @endif">
                 <a href="{{ route('archives.index') }}">
                     <i class="now-ui-icons design_bullet-list-67"></i>
                     <p>{{ __('Arsip Surat') }}</p>

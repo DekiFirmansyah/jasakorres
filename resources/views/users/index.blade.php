@@ -1,5 +1,5 @@
 @extends('layouts.app', [
-'namePage' => 'Users Management',
+'namePage' => 'Manajemen User',
 'class' => 'sidebar-mini',
 'activePage' => 'users',
 ])
@@ -64,7 +64,7 @@
                                         class="btn btn-success btn-icon btn-sm" title="Edit">
                                         <i class="far fa-edit"></i>
                                     </a>
-                                    <button class="btn btn-danger btn-icon btn-sm" title="Delete"
+                                    <button class="btn btn-danger btn-icon btn-sm" title="Hapus"
                                         onclick="confirmDelete({{ $user->id }})">
                                         <i class="far fa-trash-alt"></i>
                                     </button>

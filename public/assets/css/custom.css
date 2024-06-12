@@ -1,0 +1,32 @@
+.hidden {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .nav-tabs .nav-item {
+        flex: 1 1 50%;
+        /* Set tab width to 50% on small screens */
+    }
+
+    .nav-tabs .nav-link .text {
+        display: none;
+        /* Hide text on small screens */
+    }
+
+    .nav-tabs .nav-link .icon {
+        display: inline-block;
+        /* Show icons on small screens */
+    }
+}
+
+@media (max-width: 576px) {
+    .nav-tabs .nav-item {
+        flex: 1 1 100%;
+        /* Set tab width to 100% on extra small screens */
+    }
+}
+
+.nav-tabs .nav-link .icon {
+    display: none;
+    /* Hide icons on larger screens */
+}

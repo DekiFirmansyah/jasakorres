@@ -1,5 +1,5 @@
 @extends('layouts.app', [
-'namePage' => 'Letters Management',
+'namePage' => 'Manajemen Surat',
 'class' => 'sidebar-mini',
 'activePage' => 'letters',
 ])
@@ -12,7 +12,7 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                    <h5 class="title">{{__(" Add Letter")}}</h5>
+                    <h5 class="title">{{__(" Tambah Surat")}}</h5>
                 </div>
                 <div class="card-body">
                     <div class="toolbar">
@@ -23,17 +23,17 @@
                         <div class="row">
                             <div class="col-md-6 pr-1">
                                 <div class="form-group">
-                                    <label for="title">{{__(" Title")}}</label>
+                                    <label for="title">{{__(" Judul Surat")}}</label>
                                     <input type="text" class="form-control" id="title" name="title"
-                                        placeholder="Enter title">
+                                        placeholder="Masukkan judul surat">
                                     @include('alerts.feedback', ['field' => 'title'])
                                 </div>
                             </div>
                             <div class="col-md-6 pl-1">
                                 <div class="form-group">
-                                    <label for="about">{{__(" About")}}</label>
+                                    <label for="about">{{__(" Perihal Surat")}}</label>
                                     <input type="text" class="form-control" id="about" name="about"
-                                        placeholder="Enter About">
+                                        placeholder="Masukkan kategori perihal surat">
                                     @include('alerts.feedback', ['field' => 'about'])
                                 </div>
                             </div>
@@ -41,15 +41,17 @@
                         <div class="row">
                             <div class="col-md-6 pr-1">
                                 <div class="form-group">
-                                    <label for="purpose">{{__(" Purpose")}}</label>
+                                    <label for="purpose">{{__(" Dikirim Kepada")}}</label>
                                     <input type="text" class="form-control" id="purpose" name="purpose"
-                                        placeholder="Enter Purpose">
+                                        placeholder="Masukkan data nama tujuan surat">
                                     @include('alerts.feedback', ['field' => 'purpose'])
                                 </div>
                             </div>
                             <div class="col-md-6 pl-1">
                                 <div class="form-group">
-                                    <label for="validators">{{__(" Validators")}}</label>
+                                    <label for="validators">{{__(" Pilih Validator")}}</label>
+                                    <p class="form-text text-muted">(Pilih pegawai yang harus menvalidasi
+                                        surat)</p>
                                     <select name="validators[]" id="validators" class="form-control select2bs4" multiple
                                         required>
                                         @foreach($validators as $validator)
@@ -63,7 +65,8 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6 pr-1">
-                                <label for="Letter File">{{__(" Letter File")}}</label>
+                                <label for="Letter File">{{__(" Dokumen Surat")}}</label>
+                                <p class="form-text text-muted">(Ekstensi dokumen berupa .doc/.docx)</p>
                                 <div class="input-group">
                                     <input type="file" class="form-control" id="file" name="file">
                                     <label class="input-group-text" for="file">Upload</label>
@@ -72,17 +75,18 @@
                             </div>
                             <div class="col-md-6 pl-1">
                                 <div class="form-group">
-                                    <label>Letter Description</label>
+                                    <label for="description">Deskripsi Surat (Opsional/Boleh kosong)</label>
                                     <textarea rows="4" cols="80" class="form-control" id="description"
-                                        name="description" placeholder="Here can be letter description"></textarea>
+                                        name="description"
+                                        placeholder="Disini untuk menambahkan deskripsi surat"></textarea>
                                     @include('alerts.feedback', ['field' => 'description'])
                                 </div>
                             </div>
                         </div>
                         <div class="card-footer ">
-                            <button type="submit" class="btn btn-primary btn-round">{{__('Save')}}</button>
+                            <button type="submit" class="btn btn-primary btn-round">{{__('Simpan')}}</button>
                             <a class="btn btn-secondary btn-round text-white pull-right"
-                                href="{{ route('letters.index') }}">Back</a>
+                                href="{{ route('letters.index') }}">Kembali</a>
                         </div>
                     </form>
                 </div>
@@ -92,10 +96,5 @@
         </div>
         <!-- end col-md-12 -->
     </div>
-    <!-- <div class="alert alert-danger">
-        <span>
-            <b></b> This is a PRO feature!</span>
-    </div> -->
-    <!-- end row -->
 </div>
 @endsection

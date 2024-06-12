@@ -1,5 +1,5 @@
 @extends('layouts.app', [
-'namePage' => 'Validations Management',
+'namePage' => 'Manajemen Validasi Surat',
 'class' => 'sidebar-mini',
 'activePage' => 'validations',
 ])
@@ -12,8 +12,6 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                    <!-- <a class="btn btn-primary btn-round text-white pull-right" href="{{ route('letters.create') }}">Add
-                        Letter</a> -->
                     <h4 class="card-title">Validasi Surat</h4>
                     <div class="col-12 mt-2">
                     </div>
@@ -21,17 +19,23 @@
                 <div class="card-body">
                     <div class="toolbar">
                         @include('alerts.success')
-                        <ul class="nav nav-tabs" id="validationTabs" role="tablist">
-                            <li class="nav-item">
-                                <a class="nav-link active" id="your-validations-tab" data-toggle="tab"
+                        <ul class="nav nav-tabs d-flex flex-wrap" id="validationTabs" role="tablist">
+                            <li class="nav-item flex-fill">
+                                <a class="nav-link active text-center" id="your-validations-tab" data-toggle="tab"
                                     href="#your-validations" role="tab" aria-controls="your-validations"
-                                    aria-selected="true">Surat yang Perlu Divalidasi</a>
+                                    aria-selected="true">
+                                    <span class="btn-icon"><i class="fas fa-tasks"></i></span>
+                                    <span class="text">Surat yang Perlu Divalidasi</span>
+                                </a>
                             </li>
                             @hasanyrole('secretary')
-                            <li class="nav-item">
-                                <a class="nav-link" id="apply-letter-code-tab" data-toggle="tab"
+                            <li class="nav-item flex-fill">
+                                <a class="nav-link text-center" id="apply-letter-code-tab" data-toggle="tab"
                                     href="#apply-letter-code" role="tab" aria-controls="apply-letter-code"
-                                    aria-selected="false">Surat yang Perlu Kode Surat</a>
+                                    aria-selected="false">
+                                    <span class="btn-icon"><i class="fas fa-key"></i></span>
+                                    <span class="text">Surat yang Perlu Kode Surat</span>
+                                </a>
                             </li>
                             @endhasanyrole
                         </ul>
@@ -53,20 +57,25 @@
                                     <div class="card mb-4">
                                         <div class="card-body">
                                             <h5 class="card-title">{{ $letter->title }}</h5>
-                                            <p class="card-text">{{ Str::limit($letter->about, 100) }}</p>
-                                            <p class="card-text"><small class="text-muted">Tujuan:
+                                            <p class="card-text"><small class="text-muted">Dikirim Kepada:
                                                     {{ $letter->purpose }}</small>
                                             </p>
 
                                             <form action="{{ route('validations.validate', $letter->id) }}"
                                                 method="POST" class="mt-2">
                                                 @csrf
+                                                <p class="form-text text-center"><b>"Jika surat sudah sesuai,
+                                                        maka form catatan dan unggah file dikosongi!"</b>
+                                                </p>
                                                 <div class="form-group">
                                                     <label for="notes">Catatan (Optional)</label>
                                                     <textarea name="notes" id="notes" class="form-control" rows="3"
-                                                        placeholder="Here can be letter notes"></textarea>
+                                                        placeholder="Tambahkan catatan revisi surat jika diperlukan"></textarea>
                                                 </div>
                                                 <label for="File SUrat">{{__(" File Surat (Optional)")}}</label>
+                                                <p class="form-text text-muted">Unggah file yang telah diberi catatan
+                                                    disini
+                                                </p>
                                                 <div class="input-group">
                                                     <input type="file" name="file" class="form-control" id="file">
                                                     <label class="input-group-text" for="file">Upload</label>
@@ -74,7 +83,8 @@
                                                 </div>
                                                 <button type="submit" class="btn btn-primary">Validasi</button>
                                                 <a href="{{ asset('storage/' . $letter->document->file) }}"
-                                                    target="_blank" class="btn btn-info pull-right">Lihat Dokumen</a>
+                                                    target="_blank" rel="tooltip" class="btn btn-info pull-right">Lihat
+                                                    Dokumen</a>
                                             </form>
                                         </div>
                                     </div>
@@ -97,8 +107,7 @@
                                     <div class="card mb-4">
                                         <div class="card-body">
                                             <h5 class="card-title">{{ $letter->title }}</h5>
-                                            <p class="card-text">{{ Str::limit($letter->about, 100) }}</p>
-                                            <p class="card-text"><small class="text-muted">Tujuan:
+                                            <p class="card-text"><small class="text-muted">Dikirim Kepada:
                                                     {{ $letter->purpose }}</small>
                                             </p>
 
@@ -118,13 +127,18 @@
                                                         <input type="text" name="letter_code" id="letter_code"
                                                             class="form-control" placeholder="Masukkan kode surat">
                                                     </div>
-                                                    <button type="submit" class="btn btn-success">Submit Kode</button>
+                                                    <button type="submit" class="btn btn-success">Simpan</button>
                                                 </form>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 @endforeach
+                            </div>
+                            <div class="mt-4">
+                                <h5>Daftar Kode Surat</h5>
+                                <embed src="{{ asset('storage/Daftar_Kode_Surat.pdf') }}" type="application/pdf"
+                                    width="100%" height="600px" />
                             </div>
                             @endif
                         </div>
@@ -136,10 +150,6 @@
         </div>
         <!-- end col-md-12 -->
     </div>
-    <!-- <div class="alert alert-danger">
-        <span>
-            <b></b> This is a PRO feature!</span>
-    </div> -->
     <!-- end row -->
 </div>
 @endsection

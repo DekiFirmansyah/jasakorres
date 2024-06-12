@@ -93,12 +93,12 @@
                         aria-haspopup="true" aria-expanded="true">
                         <i class="now-ui-icons users_single-02"></i>
                         <p>
-                            <span class="d-lg-none d-md-block">{{ __("Account") }}</span>
+                            <span class="d-lg-none d-md-block">{{ __("Akun") }}</span>
                         </p>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                        <a class="dropdown-item" href="{{ route('profile.edit') }}">{{ __("My profile") }}</a>
-                        <a class="dropdown-item" href="{{ route('profile.edit') }}">{{ __("Edit profile") }}</a>
+                        <a class="dropdown-item" href="{{ route('profile.edit') }}">{{ __("Profil saya") }}</a>
+                        <a class="dropdown-item" href="{{ route('profile.edit') }}">{{ __("Edit profil") }}</a>
                         <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
                           document.getElementById('logout-form').submit();">
                             {{ __('Logout') }}

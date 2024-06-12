@@ -1,5 +1,5 @@
 @extends('layouts.app', [
-'namePage' => 'Archives Management',
+'namePage' => 'Manajemen Arsip Surat',
 'class' => 'sidebar-mini',
 'activePage' => 'archives',
 ])
@@ -12,7 +12,7 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title">Archives</h4>
+                    <h4 class="card-title">Arsip Surat</h4>
                     <div class="col-12 mt-2">
                     </div>
                 </div>
@@ -20,26 +20,41 @@
                     <div class="toolbar">
                         @include('alerts.success')
                         <!-- Tabs Navigation -->
-                        <ul class="nav nav-tabs" id="letterTabs" role="tablist">
-                            <li class="nav-item">
-                                <a class="nav-link active" id="all-letters-tab" data-toggle="tab" href="#all-letters"
-                                    role="tab" aria-controls="all-letters" aria-selected="true">Semua Surat</a>
+                        <ul class="nav nav-tabs d-flex flex-wrap" id="letterTabs" role="tablist">
+                            <li class="nav-item flex-fill">
+                                <a class="nav-link active text-center" id="all-letters-tab" data-toggle="tab"
+                                    href="#all-letters" role="tab" aria-controls="all-letters" aria-selected="true">
+                                    <span class="btn-icon"><i class="fas fa-envelope"></i></span>
+                                    <span class="text">Semua Surat</span>
+                                </a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="operation-tab" data-toggle="tab" href="#operation" role="tab"
-                                    aria-controls="operation" aria-selected="false">Operation</a>
+                            <li class="nav-item flex-fill">
+                                <a class="nav-link text-center" id="operation-tab" data-toggle="tab" href="#operation"
+                                    role="tab" aria-controls="operation" aria-selected="false">
+                                    <span class="btn-icon"><i class="fas fa-cogs"></i></span>
+                                    <span class="text">Operation</span>
+                                </a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="hcga-tab" data-toggle="tab" href="#hcga" role="tab"
-                                    aria-controls="hcga" aria-selected="false">HC&GA</a>
+                            <li class="nav-item flex-fill">
+                                <a class="nav-link text-center" id="hcga-tab" data-toggle="tab" href="#hcga" role="tab"
+                                    aria-controls="hcga" aria-selected="false">
+                                    <span class="btn-icon"><i class="fas fa-users"></i></span>
+                                    <span class="text">Human Capital & General Affair</span>
+                                </a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="finance-tab" data-toggle="tab" href="#finance" role="tab"
-                                    aria-controls="finance" aria-selected="false">Finance</a>
+                            <li class="nav-item flex-fill">
+                                <a class="nav-link text-center" id="finance-tab" data-toggle="tab" href="#finance"
+                                    role="tab" aria-controls="finance" aria-selected="false">
+                                    <span class="btn-icon"><i class="fas fa-dollar-sign"></i></span>
+                                    <span class="text">Finance</span>
+                                </a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="maintenance-tab" data-toggle="tab" href="#maintenance"
-                                    role="tab" aria-controls="maintenance" aria-selected="false">Maintenance</a>
+                            <li class="nav-item flex-fill">
+                                <a class="nav-link text-center" id="maintenance-tab" data-toggle="tab"
+                                    href="#maintenance" role="tab" aria-controls="maintenance" aria-selected="false">
+                                    <span class="btn-icon"><i class="fas fa-tools"></i></span>
+                                    <span class="text">Maintenance</span>
+                                </a>
                             </li>
                         </ul>
                         <!--        Here you can write extra buttons/actions for the toolbar              -->
@@ -95,7 +110,7 @@
                                             </a>
                                             <button data-id="{{ $letter->id }}"
                                                 class="btn btn-success btn-icon btn-sm btn-update-file"
-                                                title="Update Dokumen">
+                                                title="Perbarui Dokumen">
                                                 <i class="far fa-edit"></i>
                                             </button>
                                         </td>
@@ -150,10 +165,11 @@
                                                 title="Lihat Dokumen">
                                                 <i class="far fa-file"></i>
                                             </a>
-                                            <a type="button" href="{{ route('archives.edit', $letter->id) }}"
-                                                rel="tooltip" class="btn btn-success btn-icon btn-sm" title="Edit">
+                                            <button data-id="{{ $letter->id }}"
+                                                class="btn btn-success btn-icon btn-sm btn-update-file"
+                                                title="Perbarui Dokumen">
                                                 <i class="far fa-edit"></i>
-                                            </a>
+                                            </button>
                                         </td>
                                     </tr>
                                     @endforeach()
@@ -206,10 +222,11 @@
                                                 title="Lihat Dokumen">
                                                 <i class="far fa-file"></i>
                                             </a>
-                                            <a type="button" href="{{ route('archives.edit', $letter->id) }}"
-                                                rel="tooltip" class="btn btn-success btn-icon btn-sm" title="Edit">
+                                            <button data-id="{{ $letter->id }}"
+                                                class="btn btn-success btn-icon btn-sm btn-update-file"
+                                                title="Perbarui Dokumen">
                                                 <i class="far fa-edit"></i>
-                                            </a>
+                                            </button>
                                         </td>
                                     </tr>
                                     @endforeach()
@@ -262,10 +279,11 @@
                                                 title="Lihat Dokumen">
                                                 <i class="far fa-file"></i>
                                             </a>
-                                            <a type="button" href="{{ route('archives.edit', $letter->id) }}"
-                                                rel="tooltip" class="btn btn-success btn-icon btn-sm" title="Edit">
+                                            <button data-id="{{ $letter->id }}"
+                                                class="btn btn-success btn-icon btn-sm btn-update-file"
+                                                title="Perbarui Dokumen">
                                                 <i class="far fa-edit"></i>
-                                            </a>
+                                            </button>
                                         </td>
                                     </tr>
                                     @endforeach()
@@ -318,11 +336,11 @@
                                                 title="Lihat Dokumen">
                                                 <i class="far fa-file"></i>
                                             </a>
-                                            <a type="button" href="{{ route('archives.edit', $letter->id) }}"
-                                                rel="tooltip" class="btn btn-success btn-icon btn-sm btn-update-file"
-                                                title="Edit">
+                                            <button data-id="{{ $letter->id }}"
+                                                class="btn btn-success btn-icon btn-sm btn-update-file"
+                                                title="Perbarui Dokumen">
                                                 <i class="far fa-edit"></i>
-                                            </a>
+                                            </button>
                                         </td>
                                     </tr>
                                     @endforeach()
@@ -352,32 +370,11 @@
         </div>
         <!-- end col-md-12 -->
     </div>
-    <!-- <div class="alert alert-danger">
-        <span>
-            <b></b> This is a PRO feature!</span>
-    </div> -->
-    <!-- end row -->
 </div>
 @endsection
 
 @push('js')
 <script>
-function showNote(validatorName, notes) {
-    if (notes) {
-        Swal.fire({
-            title: 'Catatan dari ' + validatorName,
-            text: notes,
-            icon: 'info'
-        });
-    } else {
-        Swal.fire({
-            title: 'Catatan dari ' + validatorName,
-            text: 'Tidak ada catatan',
-            icon: 'warning'
-        });
-    }
-}
-
 document.addEventListener('DOMContentLoaded', function() {
     const updateFileButtons = document.querySelectorAll('.btn-update-file');
     const updateFileForm = document.getElementById('updateFileForm');
@@ -387,9 +384,19 @@ document.addEventListener('DOMContentLoaded', function() {
     updateFileButtons.forEach(button => {
         button.addEventListener('click', function() {
             const letterId = this.getAttribute('data-id');
-            updateFileFormAction.action = `/archives/${letterId}/update`;
-            updateFileForm.classList.remove('hidden');
-            alert("You are about to update the file for this letter.");
+            Swal.fire({
+                title: 'Apakah anda yakin?',
+                text: 'Anda akan memperbarui data dokumen surat',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, perbarui sekarang!',
+                cancelButtonText: 'Tidak, batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    updateFileFormAction.action = `/archives/${letterId}/update`;
+                    updateFileForm.classList.remove('hidden');
+                }
+            });
         });
     });
 

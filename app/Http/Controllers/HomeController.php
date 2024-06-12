@@ -39,16 +39,17 @@ class HomeController extends Controller
 
     private function getLettersPerMonth()
     {
-        $lettersPerMonth = Letter::select(DB::raw('COUNT(*) as count'), DB::raw("strftime('%m', created_at) as month"))
-            ->groupBy('month')
-            ->whereYear('created_at', Carbon::now()->year)
-            ->get();
+        $lettersPerMonth = Letter::select(DB::raw('COUNT(*) as count'), DB::raw("MONTH(created_at) as month"))
+        ->groupBy('month')
+        ->whereYear('created_at', Carbon::now()->year)
+        ->get();
 
         $formattedData = array_fill(1, 12, 0);
+    
         foreach ($lettersPerMonth as $data) {
             $formattedData[(int)$data->month] = $data->count;
         }
-
+    
         return $formattedData;
     }
 

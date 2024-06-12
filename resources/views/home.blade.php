@@ -37,7 +37,7 @@
                 </div>
                 <div class="card-footer">
                     <div class="stats">
-                        <i class="now-ui-icons arrows-1_refresh-69"></i> Just Updated
+                        <i class="now-ui-icons arrows-1_refresh-69"></i> baru diperbarui
                     </div>
                 </div>
             </div>
@@ -68,7 +68,7 @@
                 </div>
                 <div class="card-footer">
                     <div class="stats">
-                        <i class="now-ui-icons arrows-1_refresh-69"></i> Just Updated
+                        <i class="now-ui-icons arrows-1_refresh-69"></i> baru diperbarui
                     </div>
                 </div>
             </div>
@@ -542,17 +542,17 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 
-    var ctx = document.getElementById('performanceChart').getContext("2d");
+    var prf = document.getElementById('performanceChart').getContext("2d");
 
-    gradientStroke = ctx.createLinearGradient(500, 0, 100, 0);
+    gradientStroke = prf.createLinearGradient(500, 0, 100, 0);
     gradientStroke.addColorStop(0, '#18ce0f');
     gradientStroke.addColorStop(1, chartColor);
 
-    gradientFill = ctx.createLinearGradient(0, 170, 0, 50);
+    gradientFill = prf.createLinearGradient(0, 170, 0, 50);
     gradientFill.addColorStop(0, "rgba(128, 182, 244, 0)");
     gradientFill.addColorStop(1, hexToRGB('#18ce0f', 0.4));
 
-    var chart = new Chart(ctx, {
+    var chart = new Chart(prf, {
         type: 'line',
         responsive: true,
         data: {

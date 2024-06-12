@@ -12,9 +12,9 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                    <a class="btn btn-primary btn-round text-white pull-right" href="{{ route('letters.create') }}">Add
-                        Letter</a>
-                    <h4 class="card-title">Letters</h4>
+                    <a class="btn btn-primary btn-round text-white pull-right"
+                        href="{{ route('letters.create') }}">Input Surat</a>
+                    <h4 class="card-title">Data Surat</h4>
                     <div class="col-12 mt-2">
                     </div>
                 </div>
@@ -22,16 +22,21 @@
                     <div class="toolbar">
                         @include('alerts.success')
                         <!-- Tabs Navigation -->
-                        <ul class="nav nav-tabs" id="letterTabs" role="tablist">
-                            <li class="nav-item">
-                                <a class="nav-link active" id="your-letters-tab" data-toggle="tab" href="#your-letters"
-                                    role="tab" aria-controls="your-letters" aria-selected="true">Surat yang Anda
-                                    Buat</a>
+                        <ul class="nav nav-tabs d-flex flex-wrap" id="letterTabs" role="tablist">
+                            <li class="nav-item flex-fill">
+                                <a class="nav-link active text-center" id="your-letters-tab" data-toggle="tab"
+                                    href="#your-letters" role="tab" aria-controls="your-letters" aria-selected="true">
+                                    <span class="btn-icon"><i class="fas fa-envelope"></i></span>
+                                    <span class="text">Surat yang Anda Buat</span>
+                                </a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="validated-letters-tab" data-toggle="tab"
+                            <li class="nav-item flex-fill">
+                                <a class="nav-link text-center" id="validated-letters-tab" data-toggle="tab"
                                     href="#validated-letters" role="tab" aria-controls="validated-letters"
-                                    aria-selected="false">Surat yang Sudah Divalidasi</a>
+                                    aria-selected="false">
+                                    <span class="btn-icon"><i class="fas fa-check"></i></span>
+                                    <span class="text">Surat yang Sudah Divalidasi</span>
+                                </a>
                             </li>
                         </ul>
                         <!--        Here you can write extra buttons/actions for the toolbar              -->
@@ -100,7 +105,7 @@
                                                 rel="tooltip" class="btn btn-success btn-icon btn-sm" title="Edit">
                                                 <i class="far fa-edit"></i>
                                             </a>
-                                            <button class="btn btn-danger btn-icon btn-sm" title="Delete"
+                                            <button class="btn btn-danger btn-icon btn-sm" title="Hapus"
                                                 onclick="confirmDelete({{ $letter->id }})">
                                                 <i class="far fa-trash-alt"></i>
                                             </button>
@@ -124,7 +129,7 @@
                             <h5 class="mt-3">Surat yang Sudah Divalidasi Sepenuhnya</h5>
                             @if($fullyValidatedLetters->isEmpty())
                             <div class="alert alert-info">
-                                Tidak ada surat yang divalidasi sepenuhnya atau tidak memiliki letter code.
+                                Tidak ada surat yang divalidasi sepenuhnya atau tidak memiliki kode surat.
                             </div>
                             @else
                             <table id="datatable" class="table table-striped table-bordered" cellspacing="0"
@@ -186,7 +191,7 @@
                                                 rel="tooltip" class="btn btn-success btn-icon btn-sm" title="Edit">
                                                 <i class="far fa-edit"></i>
                                             </a>
-                                            <button class="btn btn-danger btn-icon btn-sm" title="Delete"
+                                            <button class="btn btn-danger btn-icon btn-sm" title="Hapus"
                                                 onclick="confirmDelete({{ $letter->id }})">
                                                 <i class="far fa-trash-alt"></i>
                                             </button>

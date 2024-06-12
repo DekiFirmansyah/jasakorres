@@ -35,7 +35,7 @@
                                 <div class="card-body">
                                     <h5 class="card-title">{{ $letter->title }}</h5>
                                     <p class="card-text">{{ Str::limit($letter->about, 100) }}</p>
-                                    <p class="card-text"><small class="text-muted">Tujuan:
+                                    <p class="card-text"><small class="text-muted">Dikirim Kepada:
                                             {{ $letter->purpose }}</small>
                                     </p>
 

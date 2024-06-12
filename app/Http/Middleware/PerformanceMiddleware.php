@@ -19,6 +19,8 @@ class PerformanceMiddleware
         $end = microtime(true);
         $duration = $end - $start;
 
+        Log::info('PerformanceLogger: URL - ' . $request->fullUrl() . ' | Duration - ' . ($duration * 1000) . 'ms');
+        
         // Simpan data performa ke database
         DB::table('performance_logs')->insert([
             'url' => $request->fullUrl(),
