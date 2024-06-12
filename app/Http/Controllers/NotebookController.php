@@ -8,6 +8,8 @@ use App\Models\Notebook;
 use Carbon\Carbon;
 use App\Http\Requests\NotebookRequest;
 use PDF;
+use App\Exports\NotebookExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class NotebookController extends Controller
 {
@@ -124,5 +126,29 @@ class NotebookController extends Controller
 
         $pdf = PDF::loadView('notebooks.laporan_pdf', compact('notebooks', 'month'));
         return $pdf->download('agenda_surat_' . $month . '.pdf');
+    }
+
+    public function exportExcel(Request $request)
+    {
+        $month = $request->get('month');
+        
+        // Debugging: Check if month is set correctly
+        if (!$month) {
+            return back()->with('errors', 'Month is required');
+        }
+
+        // Debugging: Check data from Notebook model
+        $notebooks = Notebook::with('letter')
+            ->whereHas('letter', function ($query) use ($month) {
+                $query->whereMonth('created_at', Carbon::parse($month)->month)
+                    ->whereYear('created_at', Carbon::parse($month)->year);
+            })->get();
+
+        // Check if notebooks data is available
+        if ($notebooks->isEmpty()) {
+            return back()->with('errors', 'No data available for the selected month');
+        }
+
+        return Excel::download(new NotebookExport($month), 'agenda_surat_'. Carbon::parse($month)->format('Y_m') .'.xlsx');
     }
 }

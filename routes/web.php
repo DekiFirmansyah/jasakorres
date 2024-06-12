@@ -17,6 +17,7 @@ Route::group(['middleware' => 'auth', 'namespace' => 'App\Http\Controllers'], fu
 	Route::controller(NotebookController::class)->group(function () {
         Route::get('notebooks/filter', 'filter')->name('notebooks.filter');
         Route::get('/export-pdf', 'exportPDF')->name('notebooks.export_pdf');
+        Route::get('/export_excel', 'exportExcel')->name('notebooks.export_excel');
     });
     Route::controller(ProfileController::class)->group(function () {
         Route::get('profile', 'edit')->name('profile.edit');

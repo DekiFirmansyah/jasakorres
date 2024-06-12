@@ -1,5 +1,5 @@
 @extends('layouts.app', [
-'namePage' => 'Notebooks Management',
+'namePage' => 'Manajemen Agenda Surat',
 'class' => 'sidebar-mini',
 'activePage' => 'notebooks',
 ])
@@ -13,7 +13,7 @@
             <div class="card">
                 <div class="card-header">
                     <a class="btn btn-primary btn-round text-white pull-right"
-                        href="{{ route('notebooks.create') }}">Add
+                        href="{{ route('notebooks.create') }}">Tambah
                         Agenda Surat</a>
                     <h4 class="card-title">Agenda Surat</h4>
                     <div class="col-12 mt-2">
@@ -24,19 +24,27 @@
                         <!-- Filter Form -->
                         <form action="{{ route('notebooks.export_pdf') }}" method="GET" class="form-inline mb-3">
                             <div class="col-md-6 pr-1">
-                                <h5>Cetak Laporan Agenda</h5>
+                                <h5>Cetak Laporan Agenda Surat</h5>
                                 <div>
                                     <div class="form-group">
-                                        <label for="month" class="mr-2">Select Month</label>
+                                        <label for="month" class="mr-2">Pilih Bulan</label>
                                         <input type="month" class="form-control" id="month" name="month" required>
                                     </div>
                                     <button type="submit" class="btn btn-primary btn-round text-white">Export
                                         PDF</button>
+                                    <a href="#"
+                                        onclick="event.preventDefault(); document.getElementById('export-excel-form').submit();"
+                                        class="btn btn-success btn-round text-white">Export Excel</a>
                                 </div>
                             </div>
-
+                        </form>
+                        <!-- Form untuk Export Excel -->
+                        <form id="export-excel-form" action="{{ route('notebooks.export_excel') }}" method="GET"
+                            style="display: none;">
+                            <input type="hidden" id="month_hidden" name="month" required>
                         </form>
                         @include('alerts.success')
+                        @include('alerts.errors')
                         <!--        Here you can write extra buttons/actions for the toolbar              -->
                     </div>
                     @if($notebooks->isEmpty())
@@ -105,10 +113,14 @@
         </div>
         <!-- end col-md-12 -->
     </div>
-    <!-- <div class="alert alert-danger">
-        <span>
-            <b></b> This is a PRO feature!</span>
-    </div> -->
     <!-- end row -->
 </div>
 @endsection
+
+@push('js')
+<script>
+document.getElementById('month').addEventListener('change', function() {
+    document.getElementById('month_hidden').value = this.value;
+});
+</script>
+@endpush
