@@ -1,5 +1,5 @@
 @extends('layouts.app', [
-'namePage' => 'Letters Management',
+'namePage' => 'Manajemen Surat',
 'class' => 'sidebar-mini',
 'activePage' => 'letters',
 ])
@@ -13,7 +13,7 @@
             <div class="card">
                 <div class="card-header">
                     <a class="btn btn-primary btn-round text-white pull-right"
-                        href="{{ route('letters.create') }}">Input Surat</a>
+                        href="{{ route('letters.create') }}">Tambah Surat</a>
                     <h4 class="card-title">Data Surat</h4>
                     <div class="col-12 mt-2">
                     </div>
@@ -55,24 +55,24 @@
                                 width="100%">
                                 <thead>
                                     <tr>
-                                        <th style="width: 20px;">No</th>
-                                        <th>Title</th>
-                                        <th>About</th>
-                                        <th>Purpose</th>
-                                        <th>Validation</th>
-                                        <th>Date</th>
-                                        <th class="disabled-sorting text-right">Actions</th>
+                                        <th style="width: 10px;">No</th>
+                                        <th>Judul</th>
+                                        <th>Perihal</th>
+                                        <th>Dikirim Kepada</th>
+                                        <th>Validator</th>
+                                        <th>Tgl Buat</th>
+                                        <th class="disabled-sorting text-right" style="width: 70px;">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tfoot>
                                     <tr style="text-align: center;">
                                         <th>No</th>
-                                        <th>Title</th>
-                                        <th>About</th>
-                                        <th>Purpose</th>
-                                        <th>Validation</th>
-                                        <th>Date</th>
-                                        <th class="disabled-sorting text-right">Actions</th>
+                                        <th>Judul</th>
+                                        <th>Perihal</th>
+                                        <th>Dikirim Kepada</th>
+                                        <th>Validator</th>
+                                        <th>Tgl Buat</th>
+                                        <th>Aksi</th>
                                     </tr>
                                 </tfoot>
                                 <tbody>
@@ -241,5 +241,26 @@ function showNote(validatorName, notes) {
         });
     }
 }
+
+$(document).ready(function() {
+    $('#datatable').DataTable({
+        "pagingType": "simple_numbers",
+        "pageLength": 10,
+        "lengthChange": false,
+        "searching": true,
+        "ordering": true,
+        "info": false,
+        "columnDefs": [{
+            "orderable": false,
+            "targets": [4, 6]
+        }],
+        "language": {
+            "paginate": {
+                "previous": "<i class='fa fa-angle-left'></i>",
+                "next": "<i class='fa fa-angle-right'></i>"
+            }
+        }
+    });
+});
 </script>
 @endpush

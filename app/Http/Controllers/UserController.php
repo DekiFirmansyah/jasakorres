@@ -134,7 +134,7 @@ class UserController extends Controller
         $userDetail->save();
         
         //jika data berhasil ditambahkan, akan kembali ke halaman utama
-        return redirect()->route('user.index')->with('status', 'User Berhasil Diubah');
+        return redirect()->route('user.index')->with('status', 'User Berhasil Diperbarui');
     }
 
     /**

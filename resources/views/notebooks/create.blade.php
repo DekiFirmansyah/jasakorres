@@ -1,5 +1,5 @@
 @extends('layouts.app', [
-'namePage' => 'Agenda Management',
+'namePage' => 'Manajemen Agenda Surat',
 'class' => 'sidebar-mini',
 'activePage' => 'notebooks',
 ])
@@ -12,7 +12,7 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                    <h5 class="title">{{__(" Add Agenda")}}</h5>
+                    <h5 class="title">{{__(" Tambah Agenda")}}</h5>
                 </div>
                 <div class="card-body">
                     <div class="toolbar">
@@ -74,9 +74,9 @@
                             </div>
                         </div>
                         <div class="card-footer ">
-                            <button type="submit" class="btn btn-primary btn-round">{{__('Save')}}</button>
+                            <button type="submit" class="btn btn-primary btn-round">{{__('Simpan')}}</button>
                             <a class="btn btn-secondary btn-round text-white pull-right"
-                                href="{{ route('notebooks.index') }}">Back</a>
+                                href="{{ route('notebooks.index') }}">Kembali</a>
                         </div>
                     </form>
                 </div>

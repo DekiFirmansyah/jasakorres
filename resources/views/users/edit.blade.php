@@ -1,5 +1,5 @@
 @extends('layouts.app', [
-'namePage' => 'Users Management',
+'namePage' => 'Manajemen User',
 'class' => 'sidebar-mini',
 'activePage' => 'users',
 ])
@@ -25,9 +25,9 @@
                         <div class="row">
                             <div class="col-md-6 pr-1">
                                 <div class="form-group">
-                                    <label for="name">{{__(" Name")}}</label>
+                                    <label for="name">{{__(" Nama")}}</label>
                                     <input type="text" class="form-control" id="name" name="name"
-                                        value="{{ old('name', $user->name) }}" placeholder="Enter name">
+                                        value="{{ old('name', $user->name) }}" placeholder="Masukkan nama">
                                     @include('alerts.feedback', ['field' => 'name'])
                                 </div>
                             </div>
@@ -35,7 +35,7 @@
                                 <div class="form-group">
                                     <label for="username">{{__(" Username")}}</label>
                                     <input type="text" class="form-control" id="username" name="username"
-                                        value="{{ old('username', $user->username) }}" placeholder="Username">
+                                        value="{{ old('username', $user->username) }}" placeholder="Masukkan username">
                                     @include('alerts.feedback', ['field' => 'username'])
                                 </div>
                             </div>
@@ -45,7 +45,7 @@
                                 <div class="form-group">
                                     <label for="email">{{__(" Email")}}</label>
                                     <input type="email" class="form-control" id="email" name="email"
-                                        value="{{ old('email', $user->email) }}" placeholder="Email">
+                                        value="{{ old('email', $user->email) }}" placeholder="Masukkan email">
                                     @include('alerts.feedback', ['field' => 'email'])
                                 </div>
                             </div>
@@ -72,7 +72,7 @@
                                     <label for="posision">{{__(" Jabatan")}}</label>
                                     <input type="text" class="form-control" id="posision" name="posision"
                                         value="{{ old('posision', $user->userDetail->posision) }}"
-                                        placeholder="Jabatan">
+                                        placeholder="Masukkan jabatan">
                                     @include('alerts.feedback', ['field' => 'posision'])
                                 </div>
                             </div>
@@ -81,7 +81,7 @@
                                     <label for="nip">{{__(" NIP")}}</label>
                                     <input type="text" class="form-control" id="nip" name="nip"
                                         value="{{ old('nip', $user->userDetail->nip) }}"
-                                        placeholder="Nomor Induk Pegawai">
+                                        placeholder="Masukkan Nomor Induk Pegawai (NIP)">
                                     @include('alerts.feedback', ['field' => 'nip'])
                                 </div>
                             </div>
@@ -103,9 +103,9 @@
                             </div>
                         </div>
                         <div class="card-footer ">
-                            <button type="submit" class="btn btn-primary btn-round">{{__('Save')}}</button>
+                            <button type="submit" class="btn btn-primary btn-round">{{__('Simpan')}}</button>
                             <a class="btn btn-secondary btn-round text-white pull-right"
-                                href="{{ route('user.index') }}">Back</a>
+                                href="{{ route('user.index') }}">Kembali</a>
                         </div>
                     </form>
                 </div>

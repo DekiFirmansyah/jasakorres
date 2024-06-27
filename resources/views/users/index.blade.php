@@ -12,9 +12,9 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                    <a class="btn btn-primary btn-round text-white pull-right" href="{{ route('user.create') }}">Add
+                    <a class="btn btn-primary btn-round text-white pull-right" href="{{ route('user.create') }}">Tambah
                         user</a>
-                    <h4 class="card-title">Users</h4>
+                    <h4 class="card-title">Data User</h4>
                     <div class="col-12 mt-2">
                     </div>
                 </div>
@@ -32,7 +32,7 @@
                                 <th>Divisi</th>
                                 <th>Jabatan</th>
                                 <th>Role</th>
-                                <th class="disabled-sorting text-right">Actions</th>
+                                <th class="disabled-sorting text-right" style="width: 70px;">Aksi</th>
                             </tr>
                         </thead>
                         <tfoot>
@@ -43,7 +43,7 @@
                                 <th>Divisi</th>
                                 <th>Jabatan</th>
                                 <th>Role User</th>
-                                <th class="disabled-sorting text-right">Actions</th>
+                                <th class="disabled-sorting text-right">Aksi</th>
                             </tr>
                         </tfoot>
                         <tbody>
@@ -93,3 +93,28 @@
     <!-- end row -->
 </div>
 @endsection
+
+@push('js')
+<script>
+$(document).ready(function() {
+    $('#datatable').DataTable({
+        "pagingType": "simple_numbers",
+        "pageLength": 10,
+        "lengthChange": false,
+        "searching": true,
+        "ordering": true,
+        "info": false,
+        "columnDefs": [{
+            "orderable": false,
+            "targets": [6]
+        }],
+        "language": {
+            "paginate": {
+                "previous": "<i class='fa fa-angle-left'></i>",
+                "next": "<i class='fa fa-angle-right'></i>"
+            }
+        }
+    });
+});
+</script>
+@endpush

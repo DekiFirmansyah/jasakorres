@@ -62,7 +62,7 @@ class ProfileController extends Controller
     
         $userDetail->save();
 
-        return back()->withStatus(__('Profile successfully updated.'));
+        return back()->withStatus(__('Profil berhasil diperbarui'));
     }
 
     /**
@@ -75,6 +75,6 @@ class ProfileController extends Controller
     {
         auth()->user()->update(['password' => Hash::make($request->get('password'))]);
 
-        return back()->withPasswordStatus(__('Password successfully updated.'));
+        return back()->withPasswordStatus(__('Password berhasil diperbarui'));
     }
 }

@@ -1,5 +1,5 @@
 @extends('layouts.app', [
-'namePage' => 'Welcome',
+'namePage' => 'Selamat Datang',
 'class' => 'login-page sidebar-mini ',
 'activePage' => 'welcome',
 'backgroundImage' => asset('assets') . "/img/surat-bg.jpeg",

@@ -69,7 +69,7 @@
                                 <p class="form-text text-muted">(Ekstensi dokumen berupa .doc/.docx)</p>
                                 <div class="input-group">
                                     <input type="file" class="form-control" id="file" name="file">
-                                    <label class="input-group-text" for="file">Upload</label>
+                                    <label class="input-group-text" for="file">Unggah</label>
                                     @include('alerts.feedback', ['field' => 'file'])
                                 </div>
                             </div>

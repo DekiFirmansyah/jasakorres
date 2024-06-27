@@ -1,6 +1,6 @@
 @extends('layouts.app', [
 'class' => 'sidebar-mini ',
-'namePage' => 'User Profile',
+'namePage' => 'Profil User',
 'activePage' => 'profile',
 'activeNav' => '',
 ])
@@ -13,7 +13,7 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">
-                    <h5 class="title">{{__(" Edit Profile")}}</h5>
+                    <h5 class="title">{{__(" Edit Profil")}}</h5>
                 </div>
                 <div class="card-body">
                     <form method="post" action="{{ route('profile.update') }}" autocomplete="off"
@@ -26,7 +26,7 @@
                         <div class="row">
                             <div class="col-md-6 pr-1">
                                 <div class="form-group">
-                                    <label>{{__(" Name")}}</label>
+                                    <label>{{__(" Nama")}}</label>
                                     <input type="text" name="name" class="form-control" placeholder="Name"
                                         value="{{ old('name', auth()->user()->name) }}">
                                     @include('alerts.feedback', ['field' => 'name'])
@@ -54,7 +54,7 @@
                                 <label for="Foto Profil">{{__(" Foto Profil")}}</label>
                                 <div class="input-group">
                                     <input type="file" name="photo" class="form-control" id="photo">
-                                    <label class="input-group-text" for="photo">Upload</label>
+                                    <label class="input-group-text" for="photo">Unggah</label>
                                     @include('alerts.feedback', ['field' => 'photo'])
                                 </div>
                             </div>
@@ -65,13 +65,13 @@
                                     <label>Quotes</label>
                                     <textarea rows="4" cols="80" class="form-control" id="description"
                                         name="description"
-                                        placeholder="Here can be quotes">{{ old('description', auth()->user()->userDetail->description) }}</textarea>
+                                        placeholder="Disini untuk mendeskripsikan tentang diri anda">{{ old('description', auth()->user()->userDetail->description) }}</textarea>
                                     @include('alerts.feedback', ['field' => 'description'])
                                 </div>
                             </div>
                         </div>
                         <div class="card-footer ">
-                            <button type="submit" class="btn btn-primary btn-round">{{__('Save')}}</button>
+                            <button type="submit" class="btn btn-primary btn-round">{{__('Simpan')}}</button>
                         </div>
                         <hr class="half-rule" />
                     </form>
@@ -87,10 +87,10 @@
                         <div class="row">
                             <div class="col-md-7 pr-1">
                                 <div class="form-group {{ $errors->has('password') ? ' has-danger' : '' }}">
-                                    <label>{{__(" Current Password")}}</label>
+                                    <label>{{__(" Password Lama")}}</label>
                                     <input class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}"
-                                        name="old_password" placeholder="{{ __('Current Password') }}" type="password"
-                                        required>
+                                        name="old_password" placeholder="{{ __('Masukkan password lama') }}"
+                                        type="password" required>
                                     @include('alerts.feedback', ['field' => 'old_password'])
                                 </div>
                             </div>
@@ -98,9 +98,10 @@
                         <div class="row">
                             <div class="col-md-7 pr-1">
                                 <div class="form-group {{ $errors->has('password') ? ' has-danger' : '' }}">
-                                    <label>{{__(" New password")}}</label>
+                                    <label>{{__(" Password Baru")}}</label>
                                     <input class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}"
-                                        placeholder="{{ __('New Password') }}" type="password" name="password" required>
+                                        placeholder="{{ __('Masukkan password baru') }}" type="password" name="password"
+                                        required>
                                     @include('alerts.feedback', ['field' => 'password'])
                                 </div>
                             </div>
@@ -108,14 +109,14 @@
                         <div class="row">
                             <div class="col-md-7 pr-1">
                                 <div class="form-group {{ $errors->has('password') ? ' has-danger' : '' }}">
-                                    <label>{{__(" Confirm New Password")}}</label>
-                                    <input class="form-control" placeholder="{{ __('Confirm New Password') }}"
+                                    <label>{{__(" Konfirmasi Password Baru")}}</label>
+                                    <input class="form-control" placeholder="{{ __('Masukkan konfirmasi password') }}"
                                         type="password" name="password_confirmation" required>
                                 </div>
                             </div>
                         </div>
                         <div class="card-footer ">
-                            <button type="submit" class="btn btn-primary btn-round ">{{__('Change Password')}}</button>
+                            <button type="submit" class="btn btn-primary btn-round ">{{__('Ganti Password')}}</button>
                         </div>
                     </form>
                 </div>

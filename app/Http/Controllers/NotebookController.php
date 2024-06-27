@@ -50,7 +50,7 @@ class NotebookController extends Controller
             'description' => $request->input('description'),
         ]);
     
-        return redirect()->route('notebooks.index')->with('status', 'Agenda created successfully.');
+        return redirect()->route('notebooks.index')->with('status', 'Agenda surat keluar berhasil dibuat');
     }
 
     /**
@@ -83,7 +83,7 @@ class NotebookController extends Controller
         $notebook = Notebook::findOrFail($id);
         $notebook->update($request->all());
 
-        return redirect()->route('notebooks.index')->with('status', 'Agenda updated successfully.');
+        return redirect()->route('notebooks.index')->with('status', 'Agenda surat keluar berhasil diperbarui');
     }
 
     /**
@@ -94,7 +94,7 @@ class NotebookController extends Controller
         $notebook = Notebook::findOrFail($id);
         $notebook->delete();
 
-        return redirect()->route('notebooks.index')->with('status', 'Agenda Surat Berhasil Dihapus');
+        return redirect()->route('notebooks.index')->with('status', 'Agenda surat keluar berhasil dihapus');
     }
 
     public function filter(Request $request)
@@ -134,7 +134,7 @@ class NotebookController extends Controller
         
         // Debugging: Check if month is set correctly
         if (!$month) {
-            return back()->with('errors', 'Month is required');
+            return back()->with('errors', 'Bulan wajib diisi');
         }
 
         // Debugging: Check data from Notebook model
@@ -146,7 +146,7 @@ class NotebookController extends Controller
 
         // Check if notebooks data is available
         if ($notebooks->isEmpty()) {
-            return back()->with('errors', 'No data available for the selected month');
+            return back()->with('errors', 'Tidak ada data yang tersedia untuk bulan yang dipilih');
         }
 
         return Excel::download(new NotebookExport($month), 'agenda_surat_'. Carbon::parse($month)->format('Y_m') .'.xlsx');

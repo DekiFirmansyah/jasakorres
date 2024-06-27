@@ -1,5 +1,5 @@
 @extends('layouts.app', [
-'namePage' => 'Letter Valid Page',
+'namePage' => 'Halaman Surat Valid',
 'class' => 'sidebar-mini',
 'activePage' => 'letterValids',
 ])

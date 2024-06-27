@@ -1,5 +1,5 @@
 @extends('layouts.app', [
-'namePage' => 'Login page',
+'namePage' => 'Halaman Login',
 'class' => 'login-page sidebar-mini ',
 'activePage' => 'login',
 'backgroundImage' => asset('assets') . "/img/surat-bg.jpeg",
@@ -70,7 +70,7 @@
                     </div>
                     <div class="card-footer ">
                         <button type="submit"
-                            class="btn btn-primary btn-round btn-lg btn-block mb-3">{{ __('Get Started') }}</button>
+                            class="btn btn-primary btn-round btn-lg btn-block mb-3">{{ __('Masuk') }}</button>
                         <!-- <div class="pull-left">
                             <h6>
                                 <a href="{{ route('register') }}"
@@ -80,7 +80,7 @@
                         <div class="pull-right">
                             <h6>
                                 <a href="{{ route('password.request') }}"
-                                    class="link footer-link">{{ __('Forgot Password?') }}</a>
+                                    class="link footer-link">{{ __('Lupa Password?') }}</a>
                             </h6>
                         </div>
                     </div>

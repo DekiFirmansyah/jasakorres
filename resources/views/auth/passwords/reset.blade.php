@@ -66,7 +66,7 @@
                             </div>
                             <input id="password-confirm" type="password" class="form-control"
                                 name="password_confirmation" required autocomplete="new-password"
-                                placeholder="{{ __('Confirm Password') }}">
+                                placeholder="{{ __('Korfirmasi Password') }}">
                         </div>
                         @if ($errors->has('password'))
                         <span class="invalid-feedback" style="display: block;" role="alert">

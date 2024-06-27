@@ -59,6 +59,6 @@ class ArchiveController extends Controller
             $letter->document->save();
         }
 
-        return redirect()->route('archives.index')->with('status', 'Letter updated successfully');
+        return redirect()->route('archives.index')->with('status', 'Dokumen surat berhasil diperbarui');
     }
 }

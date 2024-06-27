@@ -356,11 +356,11 @@
                             @method('PUT')
                             <div class="input-group">
                                 <input type="file" name="file" class="form-control" id="file">
-                                <label class="input-group-text" for="file">Upload</label>
+                                <label class="input-group-text" for="file">Unggah</label>
                                 @include('alerts.feedback', ['field' => 'file'])
                             </div>
-                            <button type="submit" class="btn btn-primary">Save Changes</button>
-                            <button type="button" class="btn btn-secondary" id="cancelUpdateFile">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                            <button type="button" class="btn btn-secondary" id="cancelUpdateFile">Batal</button>
                         </form>
                     </div>
                 </div>
@@ -402,6 +402,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
     cancelUpdateFile.addEventListener('click', function() {
         updateFileForm.classList.add('hidden');
+    });
+});
+
+$(document).ready(function() {
+    $('#datatable').DataTable({
+        "pagingType": "simple_numbers",
+        "pageLength": 10,
+        "lengthChange": false,
+        "searching": true,
+        "ordering": true,
+        "info": false,
+        "columnDefs": [{
+            "orderable": false,
+            "targets": [6]
+        }],
+        "language": {
+            "paginate": {
+                "previous": "<i class='fa fa-angle-left'></i>",
+                "next": "<i class='fa fa-angle-right'></i>"
+            }
+        }
     });
 });
 </script>

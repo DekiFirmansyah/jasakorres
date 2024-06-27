@@ -30,3 +30,43 @@
     display: none;
     /* Hide icons on larger screens */
 }
+
+/* datatable */
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    padding: 0.25em 0.5em;
+    margin-left: -1px;
+    border: 1px solid #dee2e6;
+    background: #f8f9fa;
+    color: #333;
+    border-radius: 0.25rem;
+    transition: background-color 0.2s, color 0.2s;
+    font-size: 0.875em;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+    background: #c3c3c6;
+    color: white !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+    background: #007bff;
+    color: white !important;
+    border: 1px solid transparent;
+}
+
+.dataTables_wrapper .dataTables_filter {
+    float: right;
+}
+
+.dataTables_wrapper .dataTables_filter input {
+    margin-left: 0.5em;
+    font-size: 0.875em;
+}
+
+.dataTables_wrapper .dataTables_paginate {
+    margin-top: 20px;
+}
+
+.dataTables_wrapper .dataTables_length select {
+    font-size: 0.875em;
+}

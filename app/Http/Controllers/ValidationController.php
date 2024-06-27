@@ -84,18 +84,16 @@ class ValidationController extends Controller
             $document->letter->save();
         }
 
-        return redirect()->route('validations.index')->with('status', 'Kode surat berhasil diupdate.');
+        return redirect()->route('validations.index')->with('status', 'Kode surat berhasil diperbarui.');
     }
 
     public function letterValid()
     {
         $user = Auth::user();
 
-        // Surat yang sudah divalidasi sepenuhnya dan memiliki letter_code pada tabel document
-         $fullyValidatedLetters = Letter::whereHas('validations', function($query) {
-            $query->whereHas('user.roles', function($roleQuery) {
-                $roleQuery->whereIn('name', ['general-manager', 'general-director', 'executive-director']);
-            })->where('is_validated', true);
+        // Surat yang sudah divalidasi oleh user yang sedang login dan memiliki letter_code pada tabel document
+        $fullyValidatedLetters = Letter::whereHas('validations', function($query) use ($user) {
+            $query->where('user_id', $user->id)->where('is_validated', true);
         })->whereHas('document', function($query) {
             $query->whereNotNull('letter_code');
         })->get();

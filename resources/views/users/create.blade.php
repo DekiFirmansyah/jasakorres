@@ -1,5 +1,5 @@
 @extends('layouts.app', [
-'namePage' => 'Users Management',
+'namePage' => 'Manajemen User',
 'class' => 'sidebar-mini',
 'activePage' => 'users',
 ])
@@ -12,7 +12,7 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                    <h5 class="title">{{__(" Add User")}}</h5>
+                    <h5 class="title">{{__(" Tambah User")}}</h5>
                 </div>
                 <div class="card-body">
                     <div class="toolbar">
@@ -25,7 +25,7 @@
                                 <div class="form-group">
                                     <label for="name">{{__(" Nama")}}</label>
                                     <input type="text" class="form-control" id="name" name="name"
-                                        placeholder="Enter name">
+                                        placeholder="Masukkan nama">
                                     @include('alerts.feedback', ['field' => 'name'])
                                 </div>
                             </div>
@@ -33,7 +33,7 @@
                                 <div class="form-group">
                                     <label for="username">{{__(" Username")}}</label>
                                     <input type="text" class="form-control" id="username" name="username"
-                                        placeholder="Username">
+                                        placeholder="Masukkan username">
                                     @include('alerts.feedback', ['field' => 'username'])
                                 </div>
                             </div>
@@ -43,7 +43,7 @@
                                 <div class="form-group">
                                     <label for="email">{{__(" Email")}}</label>
                                     <input type="email" class="form-control" id="email" name="email"
-                                        placeholder="Email">
+                                        placeholder="Masukkan email">
                                     @include('alerts.feedback', ['field' => 'email'])
                                 </div>
                             </div>
@@ -64,15 +64,15 @@
                                 <div class="form-group">
                                     <label for="password">{{__(" Password")}}</label>
                                     <input type="password" class="form-control" id="password" name="password"
-                                        placeholder="Password">
+                                        placeholder="Masukkan password">
                                     @include('alerts.feedback', ['field' => 'password'])
                                 </div>
                             </div>
                             <div class="col-md-6 pl-1">
                                 <div class="form-group">
-                                    <label for="password_confirmation">{{__(" Confirm Password")}}</label>
+                                    <label for="password_confirmation">{{__(" Konfirmasi Password")}}</label>
                                     <input type="password" class="form-control" id="password_confirmation"
-                                        name="password_confirmation" placeholder="Confirm Password">
+                                        name="password_confirmation" placeholder="Masukkan konfirmasi password">
                                     @include('alerts.feedback', ['field' => 'password_confirmation'])
                                 </div>
                             </div>
@@ -82,7 +82,7 @@
                                 <div class="form-group">
                                     <label for="posision">{{__(" Jabatan")}}</label>
                                     <input type="text" class="form-control" id="posision" name="posision"
-                                        placeholder="Jabatan">
+                                        placeholder="Masukkan jabatan">
                                     @include('alerts.feedback', ['field' => 'posision'])
                                 </div>
                             </div>
@@ -90,7 +90,7 @@
                                 <div class="form-group">
                                     <label for="nip">{{__(" NIP")}}</label>
                                     <input type="text" class="form-control" id="nip" name="nip"
-                                        placeholder="Nomor Induk Pegawai">
+                                        placeholder=" Masukkan Nomor Induk Pegawai (NIP)">
                                     @include('alerts.feedback', ['field' => 'nip'])
                                 </div>
                             </div>
@@ -109,9 +109,9 @@
                             </div>
                         </div>
                         <div class="card-footer ">
-                            <button type="submit" class="btn btn-primary btn-round">{{__('Save')}}</button>
+                            <button type="submit" class="btn btn-primary btn-round">{{__('Simpan')}}</button>
                             <a class="btn btn-secondary btn-round text-white pull-right"
-                                href="{{ route('user.index') }}">Back</a>
+                                href="{{ route('user.index') }}">Kembali</a>
                         </div>
                     </form>
                 </div>

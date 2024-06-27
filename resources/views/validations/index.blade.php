@@ -34,7 +34,7 @@
                                     href="#apply-letter-code" role="tab" aria-controls="apply-letter-code"
                                     aria-selected="false">
                                     <span class="btn-icon"><i class="fas fa-key"></i></span>
-                                    <span class="text">Surat yang Perlu Kode Surat</span>
+                                    <span class="text">Surat yang Perlu Nomor Surat</span>
                                 </a>
                             </li>
                             @endhasanyrole
@@ -71,14 +71,17 @@
                                                     <label for="notes">Catatan (Optional)</label>
                                                     <textarea name="notes" id="notes" class="form-control" rows="3"
                                                         placeholder="Tambahkan catatan revisi surat jika diperlukan"></textarea>
+                                                    @include('alerts.feedback', ['field' => 'notes'])
                                                 </div>
                                                 <label for="File SUrat">{{__(" File Surat (Optional)")}}</label>
                                                 <p class="form-text text-muted">Unggah file yang telah diberi catatan
-                                                    disini
+                                                    disini<br>
+                                                    (Ekstensi dokumen berupa .doc/.docx)
                                                 </p>
+                                                <p class="form-text text-muted"></p>
                                                 <div class="input-group">
                                                     <input type="file" name="file" class="form-control" id="file">
-                                                    <label class="input-group-text" for="file">Upload</label>
+                                                    <label class="input-group-text" for="file">Unggah</label>
                                                     @include('alerts.feedback', ['field' => 'file'])
                                                 </div>
                                                 <button type="submit" class="btn btn-primary">Validasi</button>
@@ -95,7 +98,7 @@
                         </div>
                         <div class="tab-pane fade" id="apply-letter-code" role="tabpanel"
                             aria-labelledby="apply-letter-code-tab">
-                            <h5 class="mt-3">Permintaan Kode Surat</h5>
+                            <h5 class="mt-3">Permintaan Nomor Surat</h5>
                             @if($requestLetterCode->isEmpty())
                             <div class="alert alert-info">
                                 Semua surat sudah terdapat kode surat.
@@ -126,6 +129,7 @@
                                                         <label for="letter_code">Kode Surat</label>
                                                         <input type="text" name="letter_code" id="letter_code"
                                                             class="form-control" placeholder="Masukkan kode surat">
+                                                        @include('alerts.feedback', ['field' => 'letter_code'])
                                                     </div>
                                                     <button type="submit" class="btn btn-success">Simpan</button>
                                                 </form>

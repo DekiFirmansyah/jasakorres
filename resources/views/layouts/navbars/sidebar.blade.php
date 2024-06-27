@@ -73,7 +73,7 @@
                 </a>
             </li>
             @endhasanyrole
-            @hasanyrole('general-manager|general-director|executive-director')
+            @hasanyrole('manager|general-manager|general-director|executive-director')
             <li class="@if ($activePage == 'letterValids') active @endif">
                 <a href="{{ route('validations.valid') }}">
                     <i class="now-ui-icons education_paper"></i>

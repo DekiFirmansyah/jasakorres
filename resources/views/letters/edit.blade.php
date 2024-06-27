@@ -1,5 +1,5 @@
 @extends('layouts.app', [
-'namePage' => 'Letters Management',
+'namePage' => 'Manajemen Surat',
 'class' => 'sidebar-mini',
 'activePage' => 'letters',
 ])
@@ -63,7 +63,7 @@
                                 @endif
                                 <div class="input-group">
                                     <input type="file" name="file" class="form-control" id="file">
-                                    <label class="input-group-text" for="file">Upload</label>
+                                    <label class="input-group-text" for="file">Unggah</label>
                                     @include('alerts.feedback', ['field' => 'file'])
                                 </div>
                             </div>

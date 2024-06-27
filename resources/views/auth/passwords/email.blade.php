@@ -44,7 +44,7 @@
                     </div>
                     <div class="card-footer ">
                         <button type="submit"
-                            class="btn btn-primary btn-round btn-lg btn-block mb-3">{{ __('Send Password Reset Link') }}</button>
+                            class="btn btn-primary btn-round btn-lg btn-block mb-3">{{ __('Kirim Password Reset Link') }}</button>
                     </div>
                 </div>
             </form>

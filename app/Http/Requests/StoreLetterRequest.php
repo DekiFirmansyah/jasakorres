@@ -26,7 +26,7 @@ class StoreLetterRequest extends FormRequest
             'about' => 'required|string',
             'purpose' => 'required|string',
             'description' => 'nullable|string',
-            'file' => 'nullable|file|mimes:pdf,doc,docx|max:10000',
+            'file' => 'required|file|mimes:doc,docx|max:5000',
             'validators' => 'required|array|min:1',
             'validators.*' => 'exists:users,id',
         ];

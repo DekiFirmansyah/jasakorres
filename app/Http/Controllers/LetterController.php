@@ -100,7 +100,7 @@ class LetterController extends Controller
         }
 
         // Redirect with a success message
-        return redirect()->route('letters.index')->with('status', 'Letter created successfully');
+        return redirect()->route('letters.index')->with('status', 'Surat berhasil dibuat dan notifikasi telah dikirim ke validator');
     }
 
     /**
@@ -182,7 +182,7 @@ class LetterController extends Controller
             }
         }
         // Redirect with a success message
-        return redirect()->route('letters.index')->with('status', 'Letter updated successfully');
+        return redirect()->route('letters.index')->with('status', 'Surat berhasil diperbarui dan notifikasi telah dikirim ke validator');
     }
 
 
@@ -209,7 +209,7 @@ class LetterController extends Controller
         $letter->delete();
 
         // Redirect with a success message
-        return back()->withStatus(__('Letter deleted successfully'));
+        return back()->withStatus(__('Surat berhasil dihapus'));
     }
 
 }

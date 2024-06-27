@@ -90,7 +90,7 @@
                                         class="btn btn-success btn-icon btn-sm" title="Edit">
                                         <i class="far fa-edit"></i>
                                     </a>
-                                    <button class="btn btn-danger btn-icon btn-sm" title="Delete"
+                                    <button class="btn btn-danger btn-icon btn-sm" title="Hapus"
                                         onclick="confirmDelete({{ $notebook->id }})">
                                         <i class="far fa-trash-alt"></i>
                                     </button>
@@ -121,6 +121,27 @@
 <script>
 document.getElementById('month').addEventListener('change', function() {
     document.getElementById('month_hidden').value = this.value;
+});
+
+$(document).ready(function() {
+    $('#datatable').DataTable({
+        "pagingType": "simple_numbers",
+        "pageLength": 10,
+        "lengthChange": false,
+        "searching": true,
+        "ordering": true,
+        "info": false,
+        "columnDefs": [{
+            "orderable": false,
+            "targets": [6]
+        }],
+        "language": {
+            "paginate": {
+                "previous": "<i class='fa fa-angle-left'></i>",
+                "next": "<i class='fa fa-angle-right'></i>"
+            }
+        }
+    });
 });
 </script>
 @endpush
