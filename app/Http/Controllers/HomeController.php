@@ -77,8 +77,11 @@ class HomeController extends Controller
 
     private function getPerformance()
     {
+        $oneWeekAgo = now()->subWeek();
+
         $performancePerTime = DB::table('performance_logs')
             ->select(DB::raw('DATE(created_at) as date'), DB::raw('AVG(response_time) as avg_response_time'))
+            ->where('created_at', '>=', $oneWeekAgo)
             ->groupBy('date')
             ->orderBy('date')
             ->get();

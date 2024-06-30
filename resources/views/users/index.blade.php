@@ -32,7 +32,7 @@
                                 <th>Divisi</th>
                                 <th>Jabatan</th>
                                 <th>Role</th>
-                                <th class="disabled-sorting text-right" style="width: 70px;">Aksi</th>
+                                <th class="disabled-sorting text-right" style="width: 100px;">Aksi</th>
                             </tr>
                         </thead>
                         <tfoot>
@@ -64,6 +64,10 @@
                                         class="btn btn-success btn-icon btn-sm" title="Edit">
                                         <i class="far fa-edit"></i>
                                     </a>
+                                    <button data-id="{{ $user->id }}" data-name="{{ $user->name }}"
+                                        class="btn btn-info btn-icon btn-sm btn-edit-password" title="Ubah password">
+                                        <i class="fas fa-key"></i>
+                                    </button>
                                     <button class="btn btn-danger btn-icon btn-sm" title="Hapus"
                                         onclick="confirmDelete({{ $user->id }})">
                                         <i class="far fa-trash-alt"></i>
@@ -79,6 +83,34 @@
                             @endforeach()
                         </tbody>
                     </table>
+                    <div id="updatePasswordForm" class="hidden">
+                        <h5>Ubah Password untuk <span id="userName"></span></h5>
+                        <form method="POST" action="" id="updatePasswordFormAction">
+                            @csrf
+                            @method('PUT')
+                            <div class="row">
+                                <div class="col-md-6 pr-1">
+                                    <div class="form-group">
+                                        <label for="password">{{__(" Password Baru")}}</label>
+                                        <input type="password" class="form-control" id="password" name="password"
+                                            placeholder="Masukkan password baru" required>
+                                        @include('alerts.feedback', ['field' => 'password'])
+                                    </div>
+                                </div>
+                                <div class="col-md-6 pl-1">
+                                    <div class="form-group">
+                                        <label for="password_confirmation">{{__(" Konfirmasi Password Baru")}}</label>
+                                        <input type="password" class="form-control" id="password_confirmation"
+                                            name="password_confirmation" placeholder="Masukkan konfirmasi password"
+                                            required>
+                                        @include('alerts.feedback', ['field' => 'password'])
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Simpan</button>
+                            <button type="button" class="btn btn-secondary" id="cancelUpdatePassword">Batal</button>
+                        </form>
+                    </div>
                 </div>
                 <!-- end content-->
             </div>
@@ -86,10 +118,6 @@
         </div>
         <!-- end col-md-12 -->
     </div>
-    <!-- <div class="alert alert-danger">
-        <span>
-            <b></b> This is a PRO feature!</span>
-    </div> -->
     <!-- end row -->
 </div>
 @endsection
@@ -114,6 +142,34 @@ $(document).ready(function() {
                 "next": "<i class='fa fa-angle-right'></i>"
             }
         }
+    });
+});
+
+// Ubah password
+document.addEventListener('DOMContentLoaded', function() {
+    const editPasswordButtons = document.querySelectorAll('.btn-edit-password');
+    const updatePasswordForm = document.getElementById('updatePasswordForm');
+    const updatePasswordFormAction = document.getElementById('updatePasswordFormAction');
+    const userNameSpan = document.getElementById('userName');
+    const cancelUpdatePassword = document.getElementById('cancelUpdatePassword');
+
+    editPasswordButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const userId = this.getAttribute('data-id');
+            const userName = this.getAttribute('data-name');
+
+            // Update form action and user name
+            updatePasswordFormAction.action = `/users/${userId}/update-password`;
+            userNameSpan.textContent = userName;
+
+            // Show the form
+            updatePasswordForm.classList.remove('hidden');
+        });
+    });
+
+    cancelUpdatePassword.addEventListener('click', function() {
+        // Hide the form
+        updatePasswordForm.classList.add('hidden');
     });
 });
 </script>

@@ -129,7 +129,7 @@
                                 Tidak ada surat yang diarsipkan pada divisi Operation.
                             </div>
                             @else
-                            <table id="datatable" class="table table-striped table-bordered" cellspacing="0"
+                            <table id="datatable-operation" class="table table-striped table-bordered" cellspacing="0"
                                 width="100%">
                                 <thead>
                                     <tr>
@@ -148,7 +148,7 @@
                                         <th>No. Surat</th>
                                         <th>Tujuan Surat</th>
                                         <th>Tanggal Surat</th>
-                                        <th class="disabled-sorting text-right">Actions</th>
+                                        <th class="disabled-sorting text-right">Aksi</th>
                                     </tr>
                                 </tfoot>
                                 <tbody>
@@ -186,7 +186,7 @@
                                 Tidak ada surat yang diarsipkan pada divisi Human Capital & General Affair.
                             </div>
                             @else
-                            <table id="datatable" class="table table-striped table-bordered" cellspacing="0"
+                            <table id="datatable-hcga" class="table table-striped table-bordered" cellspacing="0"
                                 width="100%">
                                 <thead>
                                     <tr>
@@ -205,7 +205,7 @@
                                         <th>No. Surat</th>
                                         <th>Tujuan Surat</th>
                                         <th>Tanggal Surat</th>
-                                        <th class="disabled-sorting text-right">Actions</th>
+                                        <th class="disabled-sorting text-right">Aksi</th>
                                     </tr>
                                 </tfoot>
                                 <tbody>
@@ -243,7 +243,7 @@
                                 Tidak ada surat yang diarsipkan pada divisi Finance.
                             </div>
                             @else
-                            <table id="datatable" class="table table-striped table-bordered" cellspacing="0"
+                            <table id="datatable-finance" class="table table-striped table-bordered" cellspacing="0"
                                 width="100%">
                                 <thead>
                                     <tr>
@@ -262,7 +262,7 @@
                                         <th>No. Surat</th>
                                         <th>Tujuan Surat</th>
                                         <th>Tanggal Surat</th>
-                                        <th class="disabled-sorting text-right">Actions</th>
+                                        <th class="disabled-sorting text-right">Aksi</th>
                                     </tr>
                                 </tfoot>
                                 <tbody>
@@ -300,7 +300,7 @@
                                 Tidak ada surat yang diarsipkan pada divisi Maintenance.
                             </div>
                             @else
-                            <table id="datatable" class="table table-striped table-bordered" cellspacing="0"
+                            <table id="datatable-maintenance" class="table table-striped table-bordered" cellspacing="0"
                                 width="100%">
                                 <thead>
                                     <tr>
@@ -319,7 +319,7 @@
                                         <th>No. Surat</th>
                                         <th>Tujuan Surat</th>
                                         <th>Tanggal Surat</th>
-                                        <th class="disabled-sorting text-right">Actions</th>
+                                        <th class="disabled-sorting text-right">Aksi</th>
                                     </tr>
                                 </tfoot>
                                 <tbody>
@@ -354,6 +354,10 @@
                         <form method="POST" action="" id="updateFileFormAction" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
+                            <div class="form-group">
+                                <label for="letterTitle">Judul Surat</label>
+                                <p id="letterTitle" class="form-control-static"></p>
+                            </div>
                             <div class="input-group">
                                 <input type="file" name="file" class="form-control" id="file">
                                 <label class="input-group-text" for="file">Unggah</label>
@@ -379,6 +383,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const updateFileButtons = document.querySelectorAll('.btn-update-file');
     const updateFileForm = document.getElementById('updateFileForm');
     const updateFileFormAction = document.getElementById('updateFileFormAction');
+    const letterTitleElement = document.getElementById('letterTitle');
     const cancelUpdateFile = document.getElementById('cancelUpdateFile');
 
     updateFileButtons.forEach(button => {
@@ -393,8 +398,31 @@ document.addEventListener('DOMContentLoaded', function() {
                 cancelButtonText: 'Tidak, batal'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    updateFileFormAction.action = `/archives/${letterId}/update`;
-                    updateFileForm.classList.remove('hidden');
+                    // Get the letter title via AJAX
+                    fetch(`/archives/${letterId}/title`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.title) {
+                                letterTitleElement.textContent = data.title;
+                                updateFileFormAction.action =
+                                    `/archives/${letterId}/update`;
+                                updateFileForm.classList.remove('hidden');
+                            } else {
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: 'Surat tidak ditemukan',
+                                    icon: 'error'
+                                });
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            Swal.fire({
+                                title: 'Error',
+                                text: 'Terjadi kesalahan saat mengambil data surat',
+                                icon: 'error'
+                            });
+                        });
                 }
             });
         });
@@ -416,6 +444,82 @@ $(document).ready(function() {
         "columnDefs": [{
             "orderable": false,
             "targets": [6]
+        }],
+        "language": {
+            "paginate": {
+                "previous": "<i class='fa fa-angle-left'></i>",
+                "next": "<i class='fa fa-angle-right'></i>"
+            }
+        }
+    });
+
+    $('#datatable-operation').DataTable({
+        "pagingType": "simple_numbers",
+        "pageLength": 10,
+        "lengthChange": false,
+        "searching": true,
+        "ordering": true,
+        "info": false,
+        "columnDefs": [{
+            "orderable": false,
+            "targets": [5]
+        }],
+        "language": {
+            "paginate": {
+                "previous": "<i class='fa fa-angle-left'></i>",
+                "next": "<i class='fa fa-angle-right'></i>"
+            }
+        }
+    });
+
+    $('#datatable-hcga').DataTable({
+        "pagingType": "simple_numbers",
+        "pageLength": 10,
+        "lengthChange": false,
+        "searching": true,
+        "ordering": true,
+        "info": false,
+        "columnDefs": [{
+            "orderable": false,
+            "targets": [5]
+        }],
+        "language": {
+            "paginate": {
+                "previous": "<i class='fa fa-angle-left'></i>",
+                "next": "<i class='fa fa-angle-right'></i>"
+            }
+        }
+    });
+
+    $('#datatable-finance').DataTable({
+        "pagingType": "simple_numbers",
+        "pageLength": 10,
+        "lengthChange": false,
+        "searching": true,
+        "ordering": true,
+        "info": false,
+        "columnDefs": [{
+            "orderable": false,
+            "targets": [5]
+        }],
+        "language": {
+            "paginate": {
+                "previous": "<i class='fa fa-angle-left'></i>",
+                "next": "<i class='fa fa-angle-right'></i>"
+            }
+        }
+    });
+
+    $('#datatable-maintenance').DataTable({
+        "pagingType": "simple_numbers",
+        "pageLength": 10,
+        "lengthChange": false,
+        "searching": true,
+        "ordering": true,
+        "info": false,
+        "columnDefs": [{
+            "orderable": false,
+            "targets": [5]
         }],
         "language": {
             "paginate": {

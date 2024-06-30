@@ -84,9 +84,11 @@
                                                     <label class="input-group-text" for="file">Unggah</label>
                                                     @include('alerts.feedback', ['field' => 'file'])
                                                 </div>
-                                                <button type="submit" class="btn btn-primary">Validasi</button>
+                                                <button type="submit"
+                                                    class="btn btn-primary btn-round">Validasi</button>
                                                 <a href="{{ asset('storage/' . $letter->document->file) }}"
-                                                    target="_blank" rel="tooltip" class="btn btn-info pull-right">Lihat
+                                                    target="_blank" rel="tooltip"
+                                                    class="btn btn-info btn-round pull-right">Lihat
                                                     Dokumen</a>
                                             </form>
                                         </div>
@@ -115,9 +117,9 @@
                                             </p>
 
                                             <a href="{{ asset('storage/' . $letter->document->file) }}" target="_blank"
-                                                class="btn btn-info pull-right">Lihat Dokumen</a>
+                                                class="btn btn-info btn-round pull-right">Lihat Dokumen</a>
 
-                                            <button class="btn btn-warning mt-2"
+                                            <button class="btn btn-round btn-warning mt-2"
                                                 onclick="showCodeInputForm({{ $letter->id }})">Input Kode Surat</button>
 
                                             <div id="codeInputForm-{{ $letter->id }}" class="code-input-form"
@@ -131,7 +133,8 @@
                                                             class="form-control" placeholder="Masukkan kode surat">
                                                         @include('alerts.feedback', ['field' => 'letter_code'])
                                                     </div>
-                                                    <button type="submit" class="btn btn-success">Simpan</button>
+                                                    <button type="submit"
+                                                        class="btn btn-success btn-round">Simpan</button>
                                                 </form>
                                             </div>
                                         </div>

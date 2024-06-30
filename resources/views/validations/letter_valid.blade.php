@@ -41,7 +41,7 @@
 
                                     @if($letter->document && $letter->document->file)
                                     <a href="{{ asset('storage/' . $letter->document->file) }}" target="_blank"
-                                        class="btn btn-primary">Lihat Dokumen</a>
+                                        class="btn btn-primary btn-round">Lihat Dokumen</a>
                                     @else
                                     <span class="text-danger">Dokumen tidak tersedia</span>
                                     @endif
@@ -58,10 +58,6 @@
         </div>
         <!-- end col-md-12 -->
     </div>
-    <!-- <div class="alert alert-danger">
-        <span>
-            <b></b> This is a PRO feature!</span>
-    </div> -->
     <!-- end row -->
 </div>
 @endsection

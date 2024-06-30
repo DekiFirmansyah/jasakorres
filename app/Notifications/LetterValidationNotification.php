@@ -8,8 +8,9 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Notification;
 use App\Models\Letter;
+use Twilio\Rest\Client;
 
-class LetterValidationNotification extends Notification
+class LetterValidationNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -37,7 +38,7 @@ class LetterValidationNotification extends Notification
     {
         return (new MailMessage)
                     ->line('Ada surat baru yang perlu Anda validasi.')
-                    ->action('Lihat Surat', url('/letters/' . $this->letter->id))
+                    ->action('Lihat Surat', url('/validations/'))
                     ->line('Terima kasih telah menggunakan aplikasi kami!');
     }
 
@@ -74,4 +75,21 @@ class LetterValidationNotification extends Notification
     {
         return ['letter-validation'];
     }
+
+    // public function toWhatsApp($notifiable)
+    // {
+    //     $sid = env('TWILIO_SID');
+    //     $token = env('TWILIO_TOKEN');
+    //     $twilio = new Client($sid, $token);
+
+    //     $message = "Ada surat baru yang perlu Anda validasi.\nJudul: " . $this->letter->title . "\n\nLihat surat: " . url('/validations/');
+
+    //     $twilio->messages->create(
+    //         'whatsapp:+6281331386946',
+    //         [
+    //             'from' => 'whatsapp:' . env('TWILIO_WHATSAPP_NUMBER'),
+    //             'body' => $message
+    //         ]
+    //     );
+    // }
 }

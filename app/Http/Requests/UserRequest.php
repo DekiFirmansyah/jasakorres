@@ -44,6 +44,9 @@ class UserRequest extends FormRequest
             'nip' => [
                 'required', 'string'
             ],
+            'phone' => [
+                'required', 'string'
+            ],
             'posision' => [
                 'required', 'string'
             ],

@@ -27,7 +27,7 @@
                             <div class="col-md-6 pr-1">
                                 <div class="form-group">
                                     <label>{{__(" Nama")}}</label>
-                                    <input type="text" name="name" class="form-control" placeholder="Name"
+                                    <input type="text" name="name" class="form-control" placeholder="Masukkan nama"
                                         value="{{ old('name', auth()->user()->name) }}">
                                     @include('alerts.feedback', ['field' => 'name'])
                                 </div>
@@ -35,7 +35,8 @@
                             <div class="col-md-6 pl-1">
                                 <div class="form-group">
                                     <label>{{__(" Username")}}</label>
-                                    <input type="text" name="username" class="form-control" placeholder="Username"
+                                    <input type="text" name="username" class="form-control"
+                                        placeholder="Masukkan username"
                                         value="{{ old('username', auth()->user()->username) }}">
                                     @include('alerts.feedback', ['field' => 'username'])
                                 </div>
@@ -45,12 +46,23 @@
                             <div class="col-md-6 pr-1">
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">{{__(" Email address")}}</label>
-                                    <input type="email" name="email" class="form-control" placeholder="Email"
+                                    <input type="email" name="email" class="form-control" placeholder="Masukkan email"
                                         value="{{ old('email', auth()->user()->email) }}">
                                     @include('alerts.feedback', ['field' => 'email'])
                                 </div>
                             </div>
                             <div class="col-md-6 pl-1">
+                                <div class="form-group">
+                                    <label>{{__(" Nomor Telepon")}}</label>
+                                    <input type="text" name="phone" class="form-control"
+                                        placeholder="Masukkan nomor telepon"
+                                        value="{{ old('phone', auth()->user()->userDetail->phone) }}">
+                                    @include('alerts.feedback', ['field' => 'phone'])
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 pr-1">
                                 <label for="Foto Profil">{{__(" Foto Profil")}}</label>
                                 <div class="input-group">
                                     <input type="file" name="photo" class="form-control" id="photo">
@@ -58,9 +70,7 @@
                                     @include('alerts.feedback', ['field' => 'photo'])
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-8 pr-1">
+                            <div class="col-md-6 pl-1">
                                 <div class="form-group">
                                     <label>Quotes</label>
                                     <textarea rows="4" cols="80" class="form-control" id="description"
@@ -141,13 +151,15 @@
                 </div>
                 <hr>
                 <div class="button-container">
-                    <button href="#" class="btn btn-neutral btn-icon btn-round btn-lg">
+                    <button href="https://www.facebook.com/official.jpt/"
+                        class="btn btn-neutral btn-icon btn-round btn-lg">
                         <i class="fab fa-facebook-square"></i>
                     </button>
-                    <button href="#" class="btn btn-neutral btn-icon btn-round btn-lg">
-                        <i class="fab fa-twitter"></i>
+                    <button href="https://www.instagram.com/official.jpt/?hl=en"
+                        class="btn btn-neutral btn-icon btn-round btn-lg">
+                        <i class="fab fa-instagram"></i>
                     </button>
-                    <button href="#" class="btn btn-neutral btn-icon btn-round btn-lg">
+                    <button href="https://ptjpt.co.id/" class="btn btn-neutral btn-icon btn-round btn-lg">
                         <i class="fab fa-google-plus-square"></i>
                     </button>
                 </div>

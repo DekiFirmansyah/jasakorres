@@ -46,7 +46,7 @@
             <div class="card card-chart">
                 <div class="card-header">
                     <h5 class="card-category">Data Per Hari</h5>
-                    <h4 class="card-title">Performance Web</h4>
+                    <h4 class="card-title">Performa Web</h4>
                     <!-- <div class="dropdown">
                         <button type="button"
                             class="btn btn-round btn-outline-default dropdown-toggle btn-simple btn-icon no-caret"
@@ -558,7 +558,7 @@ document.addEventListener('DOMContentLoaded', function() {
         data: {
             labels: @json($performanceData['dates']),
             datasets: [{
-                label: 'Average Response Time (ms)',
+                label: 'Rata-rata respon waktu (ms)',
                 data: @json($performanceData['responseTimes']),
                 borderColor: "#18ce0f",
                 pointBorderColor: "#FFF",

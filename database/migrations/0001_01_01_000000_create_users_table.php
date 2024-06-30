@@ -46,6 +46,7 @@ return new class extends Migration
         Schema::create('user_details', function (Blueprint $table) {
             $table->id();
             $table->string('nip');
+            $table->string('phone');
             $table->string('posision');
             $table->string('photo')->nullable();
             $table->text('description')->nullable();

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Letter;
 use App\Models\Notebook;
+use App\Models\Division;
 use Carbon\Carbon;
 use App\Http\Requests\NotebookRequest;
 use PDF;
@@ -27,10 +28,32 @@ class NotebookController extends Controller
      */
     public function create()
     {
-        $letters = Letter::with('user.userDetail.division')->get()->groupBy(function ($letter) {
-            return $letter->user->userDetail->division->name;
-        });
     
+        return view('notebooks.create');
+    }
+
+    public function selectLetters(Request $request)
+    {
+         // Validasi input
+        $request->validate([
+            'month' => 'required|date_format:Y-m',
+        ]);
+
+        $month = $request->input('month');
+
+        // Retrieve letters based on the selected division and month
+        $letters = Letter::with('user.userDetail.division')
+            ->whereMonth('created_at', '=', date('m', strtotime($month)))
+            ->get()
+            ->groupBy(function($letter) {
+                return $letter->user->userDetail->division->name;
+            });
+
+        if ($letters->isEmpty()) {
+            return redirect()->back()->with('no_data', 'Tidak ada surat yang ditemukan pada bulan yang dipilih.');
+        }
+
+        // Pass the letters to the view
         return view('notebooks.create', compact('letters'));
     }
 

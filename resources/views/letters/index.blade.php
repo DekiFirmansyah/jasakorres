@@ -51,8 +51,8 @@
                                 Anda belum membuat surat apapun.
                             </div>
                             @else
-                            <table id="datatable" class="table table-striped table-bordered" cellspacing="0"
-                                width="100%">
+                            <table id="datatable-your-letters" class="table table-striped table-bordered"
+                                cellspacing="0" width="100%">
                                 <thead>
                                     <tr>
                                         <th style="width: 10px;">No</th>
@@ -132,28 +132,28 @@
                                 Tidak ada surat yang divalidasi sepenuhnya atau tidak memiliki kode surat.
                             </div>
                             @else
-                            <table id="datatable" class="table table-striped table-bordered" cellspacing="0"
-                                width="100%">
+                            <table id="datatable-validated-letters" class="table table-striped table-bordered"
+                                cellspacing="0" width="100%">
                                 <thead>
                                     <tr>
-                                        <th style="width: 20px;">No</th>
-                                        <th>Title</th>
-                                        <th>About</th>
-                                        <th>Purpose</th>
-                                        <th>Validation</th>
-                                        <th>Date</th>
-                                        <th class="disabled-sorting text-right" style="width: 120px;">Actions</th>
+                                        <th style="width: 10px;">No</th>
+                                        <th>Judul</th>
+                                        <th>Perihal</th>
+                                        <th>Dikirim Kepada</th>
+                                        <th>Validator</th>
+                                        <th>Tgl Buat</th>
+                                        <th class="disabled-sorting text-right" style="width: 70px;">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tfoot>
                                     <tr style="text-align: center;">
                                         <th>No</th>
-                                        <th>Title</th>
-                                        <th>About</th>
-                                        <th>Purpose</th>
-                                        <th>Validation</th>
-                                        <th>Date</th>
-                                        <th class="disabled-sorting text-right">Actions</th>
+                                        <th>Judul</th>
+                                        <th>Perihal</th>
+                                        <th>Dikirim Kepada</th>
+                                        <th>Validator</th>
+                                        <th>Tgl Buat</th>
+                                        <th>Aksi</th>
                                     </tr>
                                 </tfoot>
                                 <tbody>
@@ -216,10 +216,6 @@
         </div>
         <!-- end col-md-12 -->
     </div>
-    <!-- <div class="alert alert-danger">
-        <span>
-            <b></b> This is a PRO feature!</span>
-    </div> -->
     <!-- end row -->
 </div>
 @endsection
@@ -243,7 +239,26 @@ function showNote(validatorName, notes) {
 }
 
 $(document).ready(function() {
-    $('#datatable').DataTable({
+    $('#datatable-your-letters').DataTable({
+        "pagingType": "simple_numbers",
+        "pageLength": 10,
+        "lengthChange": false,
+        "searching": true,
+        "ordering": true,
+        "info": false,
+        "columnDefs": [{
+            "orderable": false,
+            "targets": [4, 6]
+        }],
+        "language": {
+            "paginate": {
+                "previous": "<i class='fa fa-angle-left'></i>",
+                "next": "<i class='fa fa-angle-right'></i>"
+            }
+        }
+    });
+
+    $('#datatable-validated-letters').DataTable({
         "pagingType": "simple_numbers",
         "pageLength": 10,
         "lengthChange": false,

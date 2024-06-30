@@ -18,6 +18,11 @@ Route::group(['middleware' => 'auth', 'namespace' => 'App\Http\Controllers'], fu
         Route::get('notebooks/filter', 'filter')->name('notebooks.filter');
         Route::get('/export-pdf', 'exportPDF')->name('notebooks.export_pdf');
         Route::get('/export_excel', 'exportExcel')->name('notebooks.export_excel');
+        Route::post('/notebooks/select-letters', 'selectLetters')->name('notebooks.selectLetters');
+    });
+    Route::controller(UserController::class)->group(function () {
+        Route::get('users/{id}/edit-password', 'editPassword')->name('admin.users.editPassword');
+        Route::put('users/{id}/update-password', 'updatePassword')->name('admin.users.updatePassword');
     });
     Route::controller(ProfileController::class)->group(function () {
         Route::get('profile', 'edit')->name('profile.edit');
@@ -37,6 +42,8 @@ Route::group(['middleware' => 'auth', 'namespace' => 'App\Http\Controllers'], fu
         Route::get('archives', 'index')->name('archives.index');
         Route::get('archives/{letter}/edit', 'edit')->name('archives.edit');
         Route::put('archives/{letter}/update', 'update')->name('archives.update');
+        Route::get('archives/{id}/title', 'getTitle')->name('archives.getTitle');
+
     });
     
 	Route::get('{page}', 'PageController@index')->name('page.index');

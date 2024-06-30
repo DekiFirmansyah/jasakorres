@@ -29,6 +29,7 @@ class ProfileRequest extends FormRequest
             'name' => ['required', 'min:3'],
             'email' => ['required', 'email', Rule::unique((new User)->getTable())->ignore(auth()->id())],
             'username' => ['required', 'min:3', Rule::unique((new User)->getTable())->ignore(auth()->id())],
+            'phone' => ['required', 'string'],
             'photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
             'description' => ['nullable', 'string'],
         ];

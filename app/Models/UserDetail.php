@@ -13,6 +13,7 @@ class UserDetail extends Model
 
     protected $fillable = [
         'nip',
+        'phone',
         'posision',
         'photo',
         'description',

@@ -10,6 +10,7 @@ use App\Http\Requests\UpdateUserRequest;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
 use Spatie\Permission\Models\Role;
+use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
@@ -60,6 +61,7 @@ class UserController extends Controller
         // Buat user detail baru
         $userDetail = UserDetail::create([
             'nip' => $input['nip'],
+            'phone' => $input['phone'],
             'posision' => $input['posision'],
             'user_id' => $user->id,
             'division_id' => $input['division_id']
@@ -122,6 +124,7 @@ class UserController extends Controller
         $userDetail = $user->userDetail;
         $userDetail->update([
             'nip' => $request->input('nip'),
+            'phone' => $request->input('phone'),
             'posision' => $request->input('posision'),
         ]);
 
@@ -145,5 +148,29 @@ class UserController extends Controller
         $user->delete();
 
         return redirect()->route('user.index')->with('status', 'User Berhasil Dihapus');
+    }
+
+    public function editPassword($id)
+    {
+        $user = User::findOrFail($id);
+        return view('admin.users.edit_password', compact('user'));
+    }
+
+    public function updatePassword(Request $request, $id)
+    {
+        // Validasi input
+        $request->validate([
+            'password' => 'required|min:6|confirmed',
+        ]);
+
+        // Ambil user berdasarkan ID
+        $user = User::findOrFail($id);
+
+        // Update password
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        // Redirect dengan pesan sukses
+        return redirect()->route('user.index')->with('status', 'Password pengguna berhasil diperbarui.');
     }
 }

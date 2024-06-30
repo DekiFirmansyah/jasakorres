@@ -69,11 +69,11 @@
                         <div class="row">
                             <div class="col-md-6 pr-1">
                                 <div class="form-group">
-                                    <label for="posision">{{__(" Jabatan")}}</label>
-                                    <input type="text" class="form-control" id="posision" name="posision"
-                                        value="{{ old('posision', $user->userDetail->posision) }}"
-                                        placeholder="Masukkan jabatan">
-                                    @include('alerts.feedback', ['field' => 'posision'])
+                                    <label for="phone">{{__(" Nomor Telepon")}}</label>
+                                    <input type="text" class="form-control" id="phone" name="phone"
+                                        value="{{ old('phone', $user->userDetail->phone) }}"
+                                        placeholder="Masukkan nomor telepon">
+                                    @include('alerts.feedback', ['field' => 'phone'])
                                 </div>
                             </div>
                             <div class="col-md-6 pl-1">
@@ -88,6 +88,15 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6 pr-1">
+                                <div class="form-group">
+                                    <label for="posision">{{__(" Jabatan")}}</label>
+                                    <input type="text" class="form-control" id="posision" name="posision"
+                                        value="{{ old('posision', $user->userDetail->posision) }}"
+                                        placeholder="Masukkan jabatan">
+                                    @include('alerts.feedback', ['field' => 'posision'])
+                                </div>
+                            </div>
+                            <div class="col-md-6 pl-1">
                                 <div class="form-group">
                                     <label for="division">{{__(" Divisi")}}</label>
                                     <select class="form-control select2bs4" style="width: 100%;" id="division_id"

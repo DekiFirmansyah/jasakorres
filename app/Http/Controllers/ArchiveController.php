@@ -61,4 +61,13 @@ class ArchiveController extends Controller
 
         return redirect()->route('archives.index')->with('status', 'Dokumen surat berhasil diperbarui');
     }
+
+    public function getTitle($id)
+    {
+        $letter = Letter::find($id);
+        if ($letter) {
+            return response()->json(['title' => $letter->title]);
+        }
+        return response()->json(['error' => 'Letter not found'], 404);
+    }
 }

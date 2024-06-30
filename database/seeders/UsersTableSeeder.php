@@ -51,8 +51,8 @@ class UsersTableSeeder extends Seeder
         $officer->assignRole('officer');
 
         $manager = User::create([
-            'name' => 'Brahmo W. S',
-            'username' => 'brahmows',
+            'name' => 'Bambang',
+            'username' => 'bambang',
             'email' => 'brahmo@jpt.id',
             'password' => bcrypt('brahmo11'),
             'created_at' => now(),
@@ -97,42 +97,49 @@ class UsersTableSeeder extends Seeder
         $userDetails = [
             [
                 'nip' => '11111',
+                'phone' => '+6281333111222',
                 'posision' => 'Administrator',
                 'user_id' => $admin->id,
                 'division_id' => 2,
             ],
             [
                 'nip' => '10054',
+                'phone' => '+6281331386946',
                 'posision' => 'Secretary (SO)',
                 'user_id' => $secretary->id,
                 'division_id' => 2,
             ],
             [
                 'nip' => '10034',
+                'phone' => '+6281333111222',
                 'posision' => 'Human Capital Senior Officer',
                 'user_id' => $officer->id,
                 'division_id' => 2,
             ],
             [
                 'nip' => '10023',
+                'phone' => '+6281333111222',
                 'posision' => 'Human Capital & General Affair Manager',
                 'user_id' => $manager->id,
                 'division_id' => 2,
             ],
             [
                 'nip' => '10044',
+                'phone' => '+6281333111222',
                 'posision' => 'General Manager Finance & HCGA',
                 'user_id' => $general_manager->id,
                 'division_id' => 2,
             ],
             [
                 'nip' => '10025',
+                'phone' => '+6281333111222',
                 'posision' => 'Direktur Keuangan & Umum',
                 'user_id' => $general_director->id,
                 'division_id' => 5,
             ],
             [
                 'nip' => '10066',
+                'phone' => '+6281333111222',
                 'posision' => 'Direktur Utama',
                 'user_id' => $executive_director->id,
                 'division_id' => 5,

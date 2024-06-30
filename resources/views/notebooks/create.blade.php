@@ -18,6 +18,25 @@
                     <div class="toolbar">
                         <!--        Here you can write extra buttons/actions for the toolbar              -->
                     </div>
+
+                    <!-- Form Pemilihan Surat Berdasarkan Divisi dan Bulan -->
+                    <form method="POST" action="{{ route('notebooks.selectLetters') }}" id="selectLetterForm">
+                        @csrf
+                        <div class="row">
+                            <div class="col-md-6 pr-1">
+                                <div class="form-group">
+                                    <label for="month">{{__(" Pilih Bulan")}}</label>
+                                    <input type="month" class="form-control" id="month" name="month" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-primary btn-round">{{__('Cari Surat')}}</button>
+                        </div>
+                    </form>
+
+                    <!-- Form Pengisian Data Agenda Surat Baru -->
+                    @if(isset($letters))
                     <form method="POST" action="{{ route('notebooks.store') }}" id="myForm"
                         enctype="multipart/form-data">
                         @csrf
@@ -79,6 +98,7 @@
                                 href="{{ route('notebooks.index') }}">Kembali</a>
                         </div>
                     </form>
+                    @endif
                 </div>
                 <!-- end content-->
             </div>
@@ -86,10 +106,22 @@
         </div>
         <!-- end col-md-12 -->
     </div>
-    <!-- <div class="alert alert-danger">
-        <span>
-            <b></b> This is a PRO feature!</span>
-    </div> -->
     <!-- end row -->
 </div>
 @endsection
+
+@push('js')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    @if(session('no_data'))
+    Swal.fire({
+        title: 'Tidak ada data surat keluar',
+        text: '{{ session('
+        no_data ') }}',
+        icon: 'warning',
+        confirmButtonText: 'OK'
+    });
+    @endif
+});
+</script>
+@endpush

@@ -42,6 +42,7 @@ class ProfileController extends Controller
         
         $userDetail = $user->userDetail;
         $userDetail->update([
+            'phone' => $request->input('phone'),
             'photo' => $photoPath,
             'description' => $request->input('description'),
         ]);
