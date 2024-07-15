@@ -32,7 +32,7 @@ Route::group(['middleware' => 'auth', 'namespace' => 'App\Http\Controllers'], fu
     Route::controller(ValidationController::class)->group(function () {
         Route::get('/validations', 'index')->name('validations.index');
         Route::get('/letter-valid', 'letterValid')->name('validations.valid');
-        Route::post('/validations/{letter}/validate', 'validateLetter')->name('validations.validate');
+        Route::put('/validations/{letter}/validate', 'validateLetter')->name('validations.validate');
         Route::post('/validations/{document}/update-code', 'updateCode')->name('letters.updateCode');
     });
     Route::controller(NotificationController::class)->group(function () {
