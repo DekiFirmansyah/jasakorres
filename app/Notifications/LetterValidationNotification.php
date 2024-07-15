@@ -10,7 +10,7 @@ use Illuminate\Notifications\Notification;
 use App\Models\Letter;
 use Twilio\Rest\Client;
 
-class LetterValidationNotification extends Notification implements ShouldQueue
+class LetterValidationNotification extends Notification
 {
     use Queueable;
 
