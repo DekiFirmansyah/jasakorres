@@ -14,7 +14,19 @@
                 <div class="card-header">
                     <!-- <a class="btn btn-primary btn-round text-white pull-right" href="{{ route('letters.create') }}">Add
                         Letter</a> -->
+
                     <h4 class="card-title">Data Surat yang Valid</h4>
+                    <form action="{{ route('validations.valid') }}" method="GET" class="form-inline">
+                        <div class="form-group">
+                            <input type="text" name="search" class="form-control" placeholder="Cari Surat"
+                                value="{{ request()->query('search') }}">
+                        </div>
+                        <div class="form-group ml-2">
+                            <input type="month" name="month" class="form-control"
+                                value="{{ request()->query('month') }}">
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-round ml-2">Cari</button>
+                    </form>
                     <div class="col-12 mt-2">
                     </div>
                 </div>
@@ -38,7 +50,9 @@
                                     <p class="card-text"><small class="text-muted">Dikirim Kepada:
                                             {{ $letter->purpose }}</small>
                                     </p>
-
+                                    <p class="card-text"><small class="text-muted">Tanggal Surat:
+                                            {{ $letter->updated_at->format('d M Y') }}</small>
+                                    </p>
                                     @if($letter->document && $letter->document->file)
                                     <a href="{{ asset('storage/' . $letter->document->file) }}" target="_blank"
                                         class="btn btn-primary btn-round">Lihat Dokumen</a>
@@ -50,6 +64,7 @@
                         </div>
                         @endforeach
                     </div>
+                    {{ $fullyValidatedLetters->appends(['search' => request()->query('search'), 'month' => request()->query('month')])->links() }}
                     @endif
                 </div>
                 <!-- end content-->
