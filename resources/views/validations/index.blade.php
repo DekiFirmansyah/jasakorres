@@ -62,8 +62,9 @@
                                             </p>
 
                                             <form action="{{ route('validations.validate', $letter->id) }}"
-                                                method="POST" class="mt-2">
+                                                method="POST" enctype="multipart/form-data">
                                                 @csrf
+                                                @method('PUT')
                                                 <p class="form-text text-center"><b>"Jika surat sudah sesuai,
                                                         maka form catatan dan unggah file dikosongi!"</b>
                                                 </p>
@@ -78,7 +79,6 @@
                                                     disini<br>
                                                     (Ekstensi dokumen berupa .doc/.docx)
                                                 </p>
-                                                <p class="form-text text-muted"></p>
                                                 <div class="input-group">
                                                     <input type="file" name="file" class="form-control" id="file">
                                                     <label class="input-group-text" for="file">Unggah</label>

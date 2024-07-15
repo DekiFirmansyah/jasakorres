@@ -38,32 +38,72 @@ class ValidationController extends Controller
                 // Hanya tampilkan surat yang sudah divalidasi oleh 'manager' dan 'secretary'
                 $query->whereHas('validations', function($q) {
                     $q->whereHas('user.roles', function($q2) {
-                        $q2->whereIn('name', ['manager', 'secretary']);
+                        $q2->where('name', 'manager');
+                    })->where('is_validated', true);
+                })->whereHas('validations', function($q) {
+                    $q->whereHas('user.roles', function($q2) {
+                        $q2->where('name', 'secretary');
                     })->where('is_validated', true);
                 });
             } elseif ($role == 'general-director') {
                 // Hanya tampilkan surat yang sudah divalidasi oleh 'general-manager', 'manager' dan 'secretary'
-                $query->whereHas('validations', function($q) {
+                $query->where(function($subQuery) {
+                    $subQuery->whereHas('validations', function($q) {
+                        $q->whereHas('user.roles', function($q2) {
+                            $q2->where('name', 'general-manager');
+                        })->where('is_validated', true);
+                    })->orWhereDoesntHave('validations', function($q) {
+                        $q->whereHas('user.roles', function($q2) {
+                            $q2->where('name', 'general-manager');
+                        });
+                    });
+                })->whereHas('validations', function($q) {
                     $q->whereHas('user.roles', function($q2) {
-                        $q2->whereIn('name', ['general-manager', 'manager', 'secretary']);
+                        $q2->where('name', 'manager');
+                    })->where('is_validated', true);
+                })->whereHas('validations', function($q) {
+                    $q->whereHas('user.roles', function($q2) {
+                        $q2->where('name', 'secretary');
                     })->where('is_validated', true);
                 });
             } elseif ($role == 'executive-director') {
-                // Hanya tampilkan surat yang sudah divalidasi oleh 'general-manager', 'manager' dan 'secretary'
-                $query->whereHas('validations', function($q) {
+                // Hanya tampilkan surat yang sudah divalidasi oleh 'general-director', 'general-manager', 'manager' dan 'secretary'
+                $query->where(function($subQuery) {
+                    $subQuery->whereHas('validations', function($q) {
+                        $q->whereHas('user.roles', function($q2) {
+                            $q2->where('name', 'general-director');
+                        })->where('is_validated', true);
+                    })->orWhereDoesntHave('validations', function($q) {
+                        $q->whereHas('user.roles', function($q2) {
+                            $q2->where('name', 'general-director');
+                        });
+                    });
+                })->where(function($subQuery) {
+                    $subQuery->whereHas('validations', function($q) {
+                        $q->whereHas('user.roles', function($q2) {
+                            $q2->where('name', 'general-manager');
+                        })->where('is_validated', true);
+                    })->orWhereDoesntHave('validations', function($q) {
+                        $q->whereHas('user.roles', function($q2) {
+                            $q2->where('name', 'general-manager');
+                        });
+                    });
+                })->whereHas('validations', function($q) {
                     $q->whereHas('user.roles', function($q2) {
-                        $q2->whereIn('name', ['general-director', 'general-manager', 'manager', 'secretary']);
+                        $q2->where('name', 'manager');
+                    })->where('is_validated', true);
+                })->whereHas('validations', function($q) {
+                    $q->whereHas('user.roles', function($q2) {
+                        $q2->where('name', 'secretary');
                     })->where('is_validated', true);
                 });
             }
         })->get();
 
-        
-        // Cek apakah user adalah secretary dan apakah surat sudah divalidasi oleh semua validator
         $requestLetterCode = Letter::whereHas('document', function($query) {
             $query->whereNull('letter_code');
         })->whereDoesntHave('validators', function ($query) {
-            $query->where('is_validated', false); // Hanya ambil surat yang semua validatornya sudah memvalidasi
+            $query->where('is_validated', false);
         })->get();
 
         return view('validations.index', compact('lettersToValidate', 'requestLetterCode'));
@@ -87,40 +127,52 @@ class ValidationController extends Controller
         return redirect()->route('validations.index')->with('status', 'Kode surat berhasil diperbarui.');
     }
 
-    public function letterValid()
+    public function letterValid(Request $request)
     {
+        $search = $request->input('search');
+        $month = $request->input('month');
+        $query = Letter::query();
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', '%' . $search . '%')
+                ->orWhere('about', 'like', '%' . $search . '%')
+                ->orWhere('purpose', 'like', '%' . $search . '%');
+            });
+        }
+
+        if ($month) {
+            $query->whereMonth('updated_at', date('m', strtotime($month)))
+                ->whereYear('updated_at', date('Y', strtotime($month)));
+        }
+        
         $user = Auth::user();
 
-        // Surat yang sudah divalidasi oleh user yang sedang login dan memiliki letter_code pada tabel document
-        $fullyValidatedLetters = Letter::whereHas('validations', function($query) use ($user) {
-            $query->where('user_id', $user->id)->where('is_validated', true);
-        })->whereHas('document', function($query) {
-            $query->whereNotNull('letter_code');
-        })->get();
+        $fullyValidatedLetters = $query->whereHas('validations', function($q) use ($user) {
+            $q->where('user_id', $user->id)->where('is_validated', true);
+        })->whereHas('document', function($q) {
+            $q->whereNotNull('letter_code');
+        })->paginate(9);
 
-        return view('validations.letter_valid', compact('fullyValidatedLetters'));
+        return view('validations.letter_valid', compact('fullyValidatedLetters', 'search', 'month'));
     }
     
     public function validateLetter($id, Request $request)
     {
         $request->validate([
             'notes' => 'nullable|string',
-            'file' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
+            'file' => 'nullable|file|mimes:doc,docx|max:5000',
         ]);
         
         $letter = Letter::findOrFail($id);
         $user = Auth::user();
 
-        // Get the associated file path
         $filePath = $letter->document->file ?? null;
 
-        // Handle file upload if a new document is uploaded
         if ($file = $request->file('file')) {
-            // Delete the old file if it exists
             if ($filePath && Storage::disk('public')->exists($filePath)) {
                 Storage::disk('public')->delete($filePath);
             }
-            // Store the new file
             $fileName = Str::random(20) . '.' . $file->getClientOriginalExtension();
             $filePath = Storage::disk('public')->putFileAs('document', $file, $fileName);
         }
@@ -143,7 +195,6 @@ class ValidationController extends Controller
             return redirect()->route('validations.index')
             ->with('status', 'Surat berhasil diperbarui dan notifikasi dikirim ke pembuat surat.');
         } else {
-            // Validasi surat oleh user yang login dengan catatan
             if ($letter->validators()->where('user_id', $user->id)->exists()) {
                 $letter->validators()->updateExistingPivot($user->id, [
                     'is_validated' => true,
@@ -172,31 +223,13 @@ class ValidationController extends Controller
             if ($nextValidator) {
                 $nextValidatorId = $nextValidator->user_id;
             
-                $roleHierarchy = [
-                    'executive-director' => ['general-director', 'general-manager', 'manager', 'secretary'],
-                    'general-director' => ['general-manager', 'manager', 'secretary'],
-                    'general-manager' => ['manager', 'secretary'],
-                    'manager' => ['secretary'],
-                ];
-            
-                $currentUserRole = $user->roles->first()->name;
-                $previousRoles = $roleHierarchy[$currentUserRole] ?? [];
-            
-                $allPreviousValidated = $letter->validations()
-                    ->whereHas('user.roles', function ($query) use ($previousRoles) {
-                        $query->whereIn('name', $previousRoles);
-                    })
-                    ->where('is_validated', true)
-                    ->count() == count($previousRoles);
-            
-                if ($allPreviousValidated && $nextValidatorId) {
+                if ($nextValidatorId) {
                     $nextValidatorUser = User::find($nextValidatorId);
                     if ($nextValidatorUser) {
                         $nextValidatorUser->notify(new LetterValidationNotification($letter));
                     }
                 }
             } else {
-                // No next validator, notify the secretary to request a letter code
                 $secretary = User::whereHas('roles', function ($query) {
                     $query->where('name', 'secretary');
                 })->first();
