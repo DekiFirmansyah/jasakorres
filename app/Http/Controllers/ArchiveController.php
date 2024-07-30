@@ -45,14 +45,21 @@ class ArchiveController extends Controller
 
         $filePath = $letter->document->file ?? null;
         // Handle file upload
-        if ($file = $request->file('file')) {
+        if ($document = $request->file('file')) {
             // Delete the old file if it exists
             if ($filePath && Storage::disk('public')->exists($filePath)) {
                 Storage::disk('public')->delete($filePath);
             }
-            // Store the new file
-            $fileName = Str::random(20) . '.' . $file->getClientOriginalExtension();
-            $filePath = Storage::disk('public')->putFileAs('document', $file, $fileName);
+            
+            $title = $letter->title;
+            
+            // Membersihkan title dari karakter yang tidak diinginkan
+            $sanitizedTitle = preg_replace('/[^A-Za-z0-9\-_ ]/', '', $title);
+            $extension = $document->getClientOriginalExtension();
+
+            $fileName = $sanitizedTitle . '.' . $extension;
+
+            $filePath = Storage::disk('public')->putFileAs('document', $document, $fileName);
 
             // Update the file path in the document
             $letter->document->file = $filePath;
