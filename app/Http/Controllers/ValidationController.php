@@ -109,6 +109,28 @@ class ValidationController extends Controller
         return view('validations.index', compact('lettersToValidate', 'requestLetterCode'));
     }
 
+    public function show($id)
+    {
+        // Ambil data surat berdasarkan ID
+        $letter = Letter::with(['validators', 'document'])->findOrFail($id);
+
+        // Ambil riwayat catatan dari tabel validations
+        $historyNotes = Validation::where('letter_id', $id)
+            ->with('user')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Return view dengan data
+        return view('validations.detail', compact('letter', 'historyNotes'));
+    }
+
+    public function detailApplyCode($id)
+    {
+        $letter = Letter::with('document')->findOrFail($id);
+        
+        return view('validations.detail_code', compact('letter'));
+    }
+
     public function updateCode(Request $request, $documentId)
     {
         $document = Document::findOrFail($documentId);
@@ -157,7 +179,7 @@ class ValidationController extends Controller
         return view('validations.letter_valid', compact('fullyValidatedLetters', 'search', 'month'));
     }
     
-    public function validateLetter($id, Request $request)
+    public function revisionLetter($id, Request $request)
     {
         $request->validate([
             'notes' => 'nullable|string',
@@ -167,81 +189,154 @@ class ValidationController extends Controller
         $letter = Letter::findOrFail($id);
         $user = Auth::user();
 
-        $filePath = $letter->document->file ?? null;
-
-        if ($file = $request->file('file')) {
-            if ($filePath && Storage::disk('public')->exists($filePath)) {
-                Storage::disk('public')->delete($filePath);
-            }
-            $fileName = Str::random(20) . '.' . $file->getClientOriginalExtension();
-            $filePath = Storage::disk('public')->putFileAs('document', $file, $fileName);
-        }
-
-        // Update the associated Document record
-        $letter->document->update([
-            'file' => $filePath,
-        ]);
+        $revisedFilePath = null;
         
-        // If notes or file are provided, send notification to the letter creator
-        if ($request->input('notes') || $file) {
-            $letter->validators()->updateExistingPivot($user->id, [
-                'notes' => $request->input('notes')
-            ]);
+        if ($revisedFile = $request->file('file')) {
+            $title = $letter->title;
             
+            // Membersihkan title dari karakter yang tidak diinginkan
+            $sanitizedTitle = preg_replace('/[^A-Za-z0-9\-_ ]/', '', $title);
+            $extension = $revisedFile->getClientOriginalExtension();
+
+            // Tentukan jalur direktori untuk penyimpanan
+            $directory = 'document';
+
+            // Menghitung jumlah revisi yang ada
+            $files = Storage::disk('public')->files($directory);
+            $revisionCount = 0;
+
+            // Cari file dengan nama yang mirip dan hitung jumlah revisi
+            foreach ($files as $file) {
+                if (strpos($file, $sanitizedTitle . '_revisi') !== false) {
+                    $revisionCount++;
+                }
+            }
+
+            // Tambahkan angka urutan ke nama file
+            $revisionNumber = $revisionCount + 1;
+            $fileName = $sanitizedTitle . '_revisi_' . str_pad($revisionNumber, 2, '0', STR_PAD_LEFT) . '.' . $extension;
+
+            // Menyimpan file dengan nama baru
+            $revisedFilePath = Storage::disk('public')->putFileAs($directory, $revisedFile, $fileName);
+        }
+        
+        // Hanya proses notifikasi jika ada notes atau file yang diunggah
+        if ($request->input('notes') || $file) {
+            
+            $validations = Validation::where('letter_id', $letter->id)
+                ->where('user_id', $user->id)
+                ->get();
+                
+            // Ambil entri pertama dari koleksi
+            $firstValidation = $validations->first();
+            
+            if (is_null($firstValidation->notes)) {
+                // Jika catatan dari entri pertama adalah null, lakukan update
+                $firstValidation->update([
+                    'notes' => $request->input('notes'),
+                    'revised_file' => $revisedFilePath,
+                ]);
+            } else {
+                // Jika catatan dari entri pertama tidak null, buat entri baru
+                Validation::create([
+                    'letter_id' => $letter->id,
+                    'user_id' => $user->id,
+                    'is_validated' => false,
+                    'notes' => $request->input('notes'),
+                    'revised_file' => $revisedFilePath
+                ]);
+            }
+            
+            // Kirim notifikasi kepada pembuat surat
             $creator = $letter->user;
             if ($creator) {
                 $creator->notify(new UpdateLetterNotification($letter));
             }
+            
             return redirect()->route('validations.index')
-            ->with('status', 'Surat berhasil diperbarui dan notifikasi dikirim ke pembuat surat.');
-        } else {
-            if ($letter->validators()->where('user_id', $user->id)->exists()) {
-                $letter->validators()->updateExistingPivot($user->id, [
+                ->with('status', 'Surat berhasil diperbarui dan notifikasi dikirim ke pembuat surat.');
+        }
+    }
+
+    public function validateSuccess($id, Request $request)
+    {
+        $request->validate([
+            'notes' => 'nullable|string',
+        ]);
+
+        $letter = Letter::findOrFail($id);
+        $user = Auth::user();
+
+        // Periksa apakah pengguna saat ini adalah validator
+        if ($letter->validators()->where('user_id', $user->id)->exists()) {
+            
+            $validations = Validation::where('letter_id', $letter->id)
+                ->where('user_id', $user->id)
+                ->get();
+                
+            // Ambil entri pertama dari koleksi
+            $firstValidation = $validations->first();
+            
+            if (is_null($firstValidation->notes)) {
+                // Jika catatan dari entri pertama adalah null, lakukan update
+                $firstValidation->update([
+                    'is_validated' => true,
+                    'notes' => $request->input('notes')
+                ]);
+            } else {
+                // Jika catatan dari entri pertama tidak null, buat entri baru
+                Validation::create([
+                    'letter_id' => $letter->id,
+                    'user_id' => $user->id,
                     'is_validated' => true,
                     'notes' => $request->input('notes')
                 ]);
             }
+
+            Validation::where('letter_id', $letter->id)
+                ->where('user_id', $user->id)
+                ->update(['is_validated' => true]);
         }
 
-        if (!$request->input('notes') && !$file) {
-            $nextValidator = null;
+        $nextValidator = null;
 
-            if ($user->hasRole('secretary')) {
-                // Sekretaris validasi -> Notifikasi ke manager atau role yang lebih tinggi jika tidak ada manager
-                $nextValidator = $this->getNextValidator($letter, ['manager', 'general-manager', 'general-director', 'executive-director']);
-            } elseif ($user->hasRole('manager')) {
-                // Manager validasi -> Notifikasi ke general-manager atau role yang lebih tinggi jika tidak ada general-manager
-                $nextValidator = $this->getNextValidator($letter, ['general-manager', 'general-director', 'executive-director']);
-            } elseif ($user->hasRole('general-manager')) {
-                // General-manager validasi -> Notifikasi ke general-director atau executive-director jika tidak ada general-director
-                $nextValidator = $this->getNextValidator($letter, ['general-director', 'executive-director']);
-            } elseif ($user->hasRole('general-director')) {
-                // General-director validasi -> Notifikasi ke executive-director
-                $nextValidator = $this->getNextValidator($letter, ['executive-director']);
+        if ($user->hasRole('secretary')) {
+            // Sekretaris validasi -> Notifikasi ke manager atau role yang lebih tinggi jika tidak ada manager
+            $nextValidator = $this->getNextValidator($letter, ['manager', 'general-manager', 'general-director', 'executive-director']);
+        } elseif ($user->hasRole('manager')) {
+            // Manager validasi -> Notifikasi ke general-manager atau role yang lebih tinggi jika tidak ada general-manager
+            $nextValidator = $this->getNextValidator($letter, ['general-manager', 'general-director', 'executive-director']);
+        } elseif ($user->hasRole('general-manager')) {
+            // General-manager validasi -> Notifikasi ke general-director atau executive-director jika tidak ada general-director
+            $nextValidator = $this->getNextValidator($letter, ['general-director', 'executive-director']);
+        } elseif ($user->hasRole('general-director')) {
+            // General-director validasi -> Notifikasi ke executive-director
+            $nextValidator = $this->getNextValidator($letter, ['executive-director']);
+        }
+
+        if ($nextValidator) {
+            $nextValidatorId = $nextValidator->user_id;
+
+            if ($nextValidatorId) {
+                $nextValidatorUser = User::find($nextValidatorId);
+                if ($nextValidatorUser) {
+                    $nextValidatorUser->notify(new LetterValidationNotification($letter));
+                }
             }
+        } else {
+            // If there's no next validator, notify the secretary to request a letter code
+            $secretary = User::whereHas('roles', function ($query) {
+                $query->where('name', 'secretary');
+            })->first();
 
-            if ($nextValidator) {
-                $nextValidatorId = $nextValidator->user_id;
-            
-                if ($nextValidatorId) {
-                    $nextValidatorUser = User::find($nextValidatorId);
-                    if ($nextValidatorUser) {
-                        $nextValidatorUser->notify(new LetterValidationNotification($letter));
-                    }
-                }
-            } else {
-                $secretary = User::whereHas('roles', function ($query) {
-                    $query->where('name', 'secretary');
-                })->first();
-            
-                if ($secretary) {
-                    $secretary->notify(new RequestLetterCodeNotification($letter));
-                }
+            if ($secretary) {
+                $secretary->notify(new RequestLetterCodeNotification($letter));
             }
         }
 
         return redirect()->route('validations.index')->with('status', 'Surat berhasil divalidasi.');
     }
+
     
     private function getNextValidator($letter, $roles)
     {

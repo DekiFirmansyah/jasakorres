@@ -32,11 +32,18 @@ Route::group(['middleware' => 'auth', 'namespace' => 'App\Http\Controllers'], fu
     Route::controller(ValidationController::class)->group(function () {
         Route::get('/validations', 'index')->name('validations.index');
         Route::get('/letter-valid', 'letterValid')->name('validations.valid');
-        Route::put('/validations/{letter}/validate', 'validateLetter')->name('validations.validate');
+        Route::put('/validations/{letter}/revision', 'revisionLetter')->name('validations.revision');
+        Route::put('/validations/{letter}/validate-success', 'validateSuccess')->name('validations.validate-success');
         Route::post('/validations/{document}/update-code', 'updateCode')->name('letters.updateCode');
+        Route::get('/validations/{id}', 'show')->name('validations.show');
+        Route::get('/validations/{id}/apply-code', 'detailApplyCode')->name('validations.code');
+    });
+    Route::controller(LetterController::class)->group(function () {
+        Route::get('/letters/{letter}/validator/{validator}/notes', 'getNotesHistory');
     });
     Route::controller(NotificationController::class)->group(function () {
-        Route::post('/notifications/mark-as-read', 'markAsRead')->name('notifications.markAsRead');
+        Route::post('/notifications/{id}/read', 'markAsRead')->name('notifications.read');
+        Route::post('/notifications/mark-all-read', 'markAllAsRead')->name('notifications.markAllRead');
     });
     Route::controller(ArchiveController::class)->group(function () {
         Route::get('archives', 'index')->name('archives.index');

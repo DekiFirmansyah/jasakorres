@@ -61,7 +61,7 @@
                                         <th>Dikirim Kepada</th>
                                         <th>Validator</th>
                                         <th>Tgl Buat</th>
-                                        <th class="disabled-sorting text-right" style="width: 70px;">Aksi</th>
+                                        <th class="disabled-sorting text-right" style="width: 100px;">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tfoot>
@@ -83,29 +83,57 @@
                                         <td>{{ $letter->about }}</td>
                                         <td>{{ $letter->purpose }}</td>
                                         <td>
-                                            <ul>
-                                                @foreach($letter->validators as $validator)
-                                                <li>{{ $validator->name }}:
-                                                    {{ $validator->pivot->is_validated ? 'Sudah' : 'Belum' }} -
-                                                    <button class="btn btn-info btn-icon btn-sm" title="Catatan"
-                                                        onclick="showNote('{{ $validator->name }}', '{{ $validator->pivot->notes }}')">
-                                                        <i class="far fa-comments"></i>
-                                                    </button>
-                                                </li>
-                                                <br>
-                                                @endforeach
-                                                <li>
-                                                    <p>Kode Surat : {{ $letter->document->letter_code }}</p>
-                                                </li>
-                                            </ul>
+                                            <table class="table table-sm table-borderless">
+                                                <thead>
+                                                    <tr style="font-size: 12px; text-align: center;">
+                                                        <th>Nama</th>
+                                                        <th>Status Validasi</th>
+                                                        <th>Catatan</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach($letter->validations as $validator)
+                                                    <tr style="text-align: center;">
+                                                        <td>{{ $validator->user->name }}</td>
+                                                        <td>
+                                                            <span
+                                                                class="badge {{ $validator->is_validated ? 'badge-success' : 'badge-danger' }}">
+                                                                {{ $validator->is_validated ? 'Valid' : 'Belum Valid' }}
+                                                            </span>
+                                                        </td>
+                                                        <td>
+                                                            <button class="btn btn-info btn-icon btn-sm"
+                                                                title="Riwayat Catatan"
+                                                                onclick="showNoteHistory('{{ $letter->id }}', '{{ $validator->user->id }}')">
+                                                                <i class="far fa-comments"></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                    @endforeach
+                                                    <tr>
+                                                        <td colspan="4">
+                                                            <strong>Kode Surat:</strong>
+                                                            <span
+                                                                class="{{ $letter->document->letter_code ? '' : 'text-muted' }}">
+                                                                {{ $letter->document->letter_code ?? 'Belum ada nomor surat' }}
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
                                         </td>
                                         <td>{{ $letter->created_at->format('d M Y') }}</td>
                                         <td class="text-right">
+                                            <a type="button" href="{{ route('letters.show', $letter->id) }}"
+                                                rel="tooltip" class="btn btn-info btn-icon btn-sm" title="Detail surat">
+                                                <i class="fa fa-info"></i>
+                                            </a>
                                             <a type="button" href="{{ route('letters.edit', $letter->id) }}"
-                                                rel="tooltip" class="btn btn-success btn-icon btn-sm" title="Edit">
+                                                rel="tooltip" class="btn btn-success btn-icon btn-sm"
+                                                title="Edit surat">
                                                 <i class="far fa-edit"></i>
                                             </a>
-                                            <button class="btn btn-danger btn-icon btn-sm" title="Hapus"
+                                            <button class="btn btn-danger btn-icon btn-sm" title="Hapus surat"
                                                 onclick="confirmDelete({{ $letter->id }})">
                                                 <i class="far fa-trash-alt"></i>
                                             </button>
@@ -140,7 +168,7 @@
                                         <th>Judul</th>
                                         <th>Perihal</th>
                                         <th>Dikirim Kepada</th>
-                                        <th>Validator</th>
+                                        <th>Nomor Surat</th>
                                         <th>Tgl Buat</th>
                                         <th class="disabled-sorting text-right" style="width: 70px;">Aksi</th>
                                     </tr>
@@ -151,7 +179,7 @@
                                         <th>Judul</th>
                                         <th>Perihal</th>
                                         <th>Dikirim Kepada</th>
-                                        <th>Validator</th>
+                                        <th>Nomor Surat</th>
                                         <th>Tgl Buat</th>
                                         <th>Aksi</th>
                                     </tr>
@@ -164,21 +192,7 @@
                                         <td>{{ $letter->about }}</td>
                                         <td>{{ $letter->purpose }}</td>
                                         <td>
-                                            <ul>
-                                                @foreach($letter->validators as $validator)
-                                                <li>{{ $validator->name }}:
-                                                    {{ $validator->pivot->is_validated ? 'Sudah' : 'Belum' }} -
-                                                    <button class="btn btn-info btn-icon btn-sm" title="Catatan"
-                                                        onclick="showNote('{{ $validator->name }}', '{{ $validator->pivot->notes }}')">
-                                                        <i class="far fa-comments"></i>
-                                                    </button>
-                                                </li>
-                                                <br>
-                                                @endforeach
-                                                <li>
-                                                    <p>Kode Surat : {{ $letter->document->letter_code }}</p>
-                                                </li>
-                                            </ul>
+                                            {{ $letter->document->letter_code }}
                                         </td>
                                         <td>{{ $letter->updated_at->format('d M Y') }}</td>
                                         <td class="text-right">
@@ -277,5 +291,38 @@ $(document).ready(function() {
         }
     });
 });
+
+function showNoteHistory(letterId, validatorId) {
+    fetch(`/letters/${letterId}/validator/${validatorId}/notes`)
+        .then(response => response.json())
+        .then(data => {
+            let notesHtml = '<ul>';
+            data.notes.forEach(note => {
+                const noteText = note.notes ? note.notes : 'Tidak ada catatan';
+
+                const date = new Date(note.created_at);
+                const formattedDate = ('0' + date.getDate()).slice(-2) + '/' +
+                    ('0' + (date.getMonth() + 1)).slice(-2) + '/' +
+                    date.getFullYear();
+
+                notesHtml += `<li>
+                                    <strong>${note.user.name}:</strong> ${noteText} 
+                                    <small>(${formattedDate})</small>
+                                ${note.revised_file ? `<br><a href="/storage/${note.revised_file}" target="_blank" 
+                                class="btn btn-info btn-round">Lihat File Revisi</a>` : ''}
+                            </li>`;
+            });
+            notesHtml += '</ul>';
+
+            Swal.fire({
+                title: 'Riwayat Catatan',
+                html: notesHtml,
+                icon: 'info'
+            });
+        })
+        .catch(error => {
+            Swal.fire('Error', 'Tidak dapat mengambil data catatan.', 'error');
+        });
+}
 </script>
 @endpush

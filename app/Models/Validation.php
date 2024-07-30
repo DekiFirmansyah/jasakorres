@@ -16,7 +16,8 @@ class Validation extends Model
         'letter_id',
         'user_id',
         'is_validated',
-        'notes'
+        'notes',
+        'revised_file'
     ];
     
     public function letter()

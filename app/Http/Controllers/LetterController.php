@@ -14,6 +14,7 @@ use App\Models\Validation;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use App\Notifications\LetterValidationNotification;
+use Illuminate\Support\Facades\DB;
 
 class LetterController extends Controller
 {
@@ -24,7 +25,20 @@ class LetterController extends Controller
     {
         $user = Auth::user();
 
-        $letters = Letter::with('validators')->where('user_id', $user->id)->get();
+        $letters = Letter::with(['validations' => function($query) {
+            // Ambil validasi terbaru untuk setiap user_id
+            $query->select('validations.*')
+                ->join(DB::raw('(SELECT user_id, letter_id, MAX(created_at) as latest_created_at 
+                                FROM validations 
+                                GROUP BY user_id, letter_id) as latest_validations'), function($join) {
+                    $join->on('validations.user_id', '=', 'latest_validations.user_id')
+                        ->on('validations.letter_id', '=', 'latest_validations.letter_id')
+                        ->on('validations.created_at', '=', 'latest_validations.latest_created_at');
+                })
+                ->orderBy('created_at', 'desc');
+        }, 'validators'])
+        ->where('user_id', $user->id)
+        ->get();
         
         $fullyValidatedLetters = Letter::where('user_id', $user->id)->whereHas('validators', function($query) {
             $query->where('is_validated', true);
@@ -37,6 +51,17 @@ class LetterController extends Controller
         })->get();
 
         return view('letters.index', compact('letters', 'fullyValidatedLetters'));
+    }
+
+    public function getNotesHistory($letterId, $validatorId)
+    {
+        $notesHistory = Validation::where('letter_id', $letterId)
+            ->where('user_id', $validatorId)
+            ->with('user')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return response()->json(['notes' => $notesHistory]);
     }
 
     /**
@@ -58,7 +83,14 @@ class LetterController extends Controller
         $filePath = null;
 
         if ($document = $request->file('file')) {
-            $fileName = Str::random(20) . '.' . $document->getClientOriginalExtension();
+            $title = $request->input('title');
+            
+            // Membersihkan title dari karakter yang tidak diinginkan
+            $sanitizedTitle = preg_replace('/[^A-Za-z0-9\-_ ]/', '', $title);
+            $extension = $document->getClientOriginalExtension();
+
+            $fileName = $sanitizedTitle . '.' . $extension;
+
             $filePath = Storage::disk('public')->putFileAs('document', $document, $fileName);
         }
 
@@ -100,11 +132,17 @@ class LetterController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id, Letter $letter)
+    public function show(string $id)
     {
-        $letter = Letter::findOrFail($id);
-        
-        return view('letters.edit', compact('letter'));
+        $letter = Letter::with(['validators', 'document'])->findOrFail($id);
+
+        // Dapatkan riwayat catatan
+        $notesHistory = Validation::where('letter_id', $id)
+            ->with('user') // Mengambil data user dari hubungan
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('letters.detail', compact('letter', 'notesHistory'));
     }
 
     /**
@@ -126,12 +164,21 @@ class LetterController extends Controller
         
         $filePath = $letter->document->file ?? null;
 
-        if ($file = $request->file('file')) {
+        if ($document = $request->file('file')) {
             if ($filePath && Storage::disk('public')->exists($filePath)) {
                 Storage::disk('public')->delete($filePath);
             }
-            $fileName = Str::random(20) . '.' . $file->getClientOriginalExtension();
-            $filePath = Storage::disk('public')->putFileAs('document', $file, $fileName);
+            
+            $title = $request->input('title');
+            
+            // Membersihkan title dari karakter yang tidak diinginkan
+            $sanitizedTitle = preg_replace('/[^A-Za-z0-9\-_ ]/', '', $title);
+            $extension = $document->getClientOriginalExtension();
+
+            $fileName = $sanitizedTitle . '.' . $extension;
+
+            $filePath = Storage::disk('public')->putFileAs('document', $document, $fileName);
+            
             $letter->document->update([
                 'file' => $filePath,
             ]);

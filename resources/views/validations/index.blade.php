@@ -60,21 +60,21 @@
                                             <p class="card-text"><small class="text-muted">Dikirim Kepada:
                                                     {{ $letter->purpose }}</small>
                                             </p>
-
-                                            <form action="{{ route('validations.validate', $letter->id) }}"
-                                                method="POST" enctype="multipart/form-data">
+                                            <p class="form-text text-center"><b>"Jika surat sudah sesuai,
+                                                    maka form catatan dan unggah file dikosongi!"</b>
+                                            </p>
+                                            <form id="revisionForm"
+                                                action="{{ route('validations.revision', $letter->id) }}" method="POST"
+                                                enctype="multipart/form-data">
                                                 @csrf
                                                 @method('PUT')
-                                                <p class="form-text text-center"><b>"Jika surat sudah sesuai,
-                                                        maka form catatan dan unggah file dikosongi!"</b>
-                                                </p>
                                                 <div class="form-group">
                                                     <label for="notes">Catatan (Optional)</label>
                                                     <textarea name="notes" id="notes" class="form-control" rows="3"
                                                         placeholder="Tambahkan catatan revisi surat jika diperlukan"></textarea>
                                                     @include('alerts.feedback', ['field' => 'notes'])
                                                 </div>
-                                                <label for="File SUrat">{{__(" File Surat (Optional)")}}</label>
+                                                <label for="file">{{__(" File Surat (Optional)")}}</label>
                                                 <p class="form-text text-muted">Unggah file yang telah diberi catatan
                                                     disini<br>
                                                     (Ekstensi dokumen berupa .doc/.docx)
@@ -84,12 +84,29 @@
                                                     <label class="input-group-text" for="file">Unggah</label>
                                                     @include('alerts.feedback', ['field' => 'file'])
                                                 </div>
-                                                <button type="submit"
-                                                    class="btn btn-primary btn-round">Validasi</button>
-                                                <a href="{{ asset('storage/' . $letter->document->file) }}"
-                                                    target="_blank" rel="tooltip"
-                                                    class="btn btn-info btn-round pull-right">Lihat
-                                                    Dokumen</a>
+                                                <div class="button-group d-flex justify-content-between">
+                                                    <button type="submit"
+                                                        class="btn btn-primary btn-round">Revisi</button>
+                                                    <a type="button" href="{{ route('validations.show', $letter->id) }}"
+                                                        rel="tooltip" class="btn btn-info btn-round"
+                                                        title="Detail surat">Detail Validasi
+                                                    </a>
+                                                </div>
+                                            </form>
+                                            <form id="successForm"
+                                                action="{{ route('validations.validate-success', $letter->id) }}"
+                                                method="POST" style="display:inline;">
+                                                @csrf
+                                                @method('PUT')
+                                                <input type="hidden" name="notes" id="notes-success">
+                                                <div class="button-group d-flex justify-content-between">
+                                                    <button type="submit"
+                                                        class="btn btn-success btn-round">Validasi</button>
+                                                    <a href="{{ asset('storage/' . $letter->document->file) }}"
+                                                        target="_blank" rel="tooltip"
+                                                        class="btn btn-secondary btn-round">Lihat
+                                                        Dokumen</a>
+                                                </div>
                                             </form>
                                         </div>
                                     </div>
@@ -115,6 +132,12 @@
                                             <p class="card-text"><small class="text-muted">Dikirim Kepada:
                                                     {{ $letter->purpose }}</small>
                                             </p>
+
+                                            <a type="button" href="{{ route('validations.code', $letter->id) }}"
+                                                rel="tooltip" class="btn btn-success btn-round"
+                                                title="Detail surat">Detail
+                                                Surat
+                                            </a>
 
                                             <a href="{{ asset('storage/' . $letter->document->file) }}" target="_blank"
                                                 class="btn btn-info btn-round pull-right">Lihat Dokumen</a>
@@ -160,3 +183,68 @@
     <!-- end row -->
 </div>
 @endsection
+
+@push('js')
+<script>
+document.getElementById('revisionForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // Mencegah pengiriman form secara langsung
+
+    var notesValue = document.getElementById('notes').value.trim();
+    var fileInput = document.getElementById('file');
+
+    if (!notesValue && fileInput.files.length === 0) {
+        Swal.fire('Gagal!', 'Silakan isi catatan atau unggah file untuk melakukan revisi.', 'error');
+        return;
+    }
+
+    // Tampilkan konfirmasi SweetAlert
+    Swal.fire({
+        title: "Apakah Anda yakin?",
+        text: "Anda akan mengirimkan revisi untuk surat ini.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: 'Ya, Lanjutkan!',
+        cancelButtonText: 'Tidak, Batal',
+        reverseButtons: true,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Jika pengguna mengonfirmasi, kirim form
+            document.getElementById('revisionForm').submit();
+            Swal.fire('Sukses!', 'Tindakan Anda telah disimpan.', 'success');
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            Swal.fire('Batal', 'Tindakan Anda telah dibatalkan.', 'error');
+        }
+    });
+});
+
+
+document.getElementById('successForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    // Ambil nilai catatan dari form revisi
+    var notesValue = document.getElementById('notes').value.trim();
+
+    // Set nilai catatan pada form validasi
+    document.getElementById('notes-success').value = notesValue;
+
+    Swal.fire({
+        title: "Apakah Anda yakin?",
+        text: "Anda akan mengonfirmasi validasi untuk surat ini.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: 'Ya, Lanjutkan!',
+        cancelButtonText: 'Tidak, Batal',
+        reverseButtons: true,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Jika pengguna mengonfirmasi, kirim form
+            document.getElementById('successForm').submit();
+            Swal.fire('Sukses!', 'Tindakan Anda telah disimpan.', 'success');
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            Swal.fire('Batal', 'Tindakan Anda telah dibatalkan.', 'error');
+        }
+    });
+    return false;
+});
+</script>
+@endpush
