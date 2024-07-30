@@ -147,6 +147,10 @@ class NotebookController extends Controller
             ->whereMonth('date_sent', '=', date('m', strtotime($month)))
             ->get();
 
+        if ($notebooks->isEmpty()) {
+            return back()->with('errors', 'Tidak ada data yang tersedia untuk bulan yang dipilih');
+        }
+            
         $pdf = PDF::loadView('notebooks.laporan_pdf', compact('notebooks', 'month'));
         return $pdf->download('agenda_surat_' . $month . '.pdf');
     }
