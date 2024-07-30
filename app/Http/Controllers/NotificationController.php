@@ -7,10 +7,23 @@ use Illuminate\Support\Facades\Auth;
 
 class NotificationController extends Controller
 {
-    public function markAsRead()
+    public function markAsRead($id)
     {
-        $user = Auth::user();
+        $notification = Auth::user()->notifications()->find($id);
+
+        if ($notification) {
+            $notification->markAsRead();
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['success' => false], 404);
+    }
+
+    public function markAllAsRead(Request $request)
+    {
+        $user = auth()->user();
         $user->unreadNotifications->markAsRead();
+
         return response()->json(['success' => true]);
     }
 }

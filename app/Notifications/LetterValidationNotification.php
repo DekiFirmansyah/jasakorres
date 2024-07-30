@@ -50,9 +50,10 @@ class LetterValidationNotification extends Notification
     public function toArray($notifiable)
     {
         return [
-            'url' => '/validations/',
+            'url' => route('validations.show', $this->letter->id),
             'message' => 'Surat perlu divalidasi!',
             'title' => $this->letter->title,
+            'url_data' => '/validations/',
         ];
     }
 
@@ -65,9 +66,10 @@ class LetterValidationNotification extends Notification
     public function toBroadcast($notifiable)
     {
         return new BroadcastMessage([
-            'url' => '/validations/',
+            'url' => route('validations.show', $this->letter->id),
             'message' => 'Surat perlu divalidasi!',
             'title' => $this->letter->title,
+            'url_data' => '/validations/',
         ]);
     }
 

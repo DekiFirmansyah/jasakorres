@@ -18,25 +18,7 @@
             <span class="navbar-toggler-bar navbar-kebab"></span>
         </button>
         <div class="collapse navbar-collapse justify-content-end" id="navigation">
-            <!-- <form>
-                <div class="input-group no-border">
-                    <input type="text" value="" class="form-control" placeholder="Search...">
-                    <div class="input-group-append">
-                        <div class="input-group-text">
-                            <i class="now-ui-icons ui-1_zoom-bold"></i>
-                        </div>
-                    </div>
-                </div>
-            </form> -->
             <ul class="navbar-nav">
-                <!-- <li class="nav-item">
-                    <a class="nav-link" href="#pablo">
-                        <i class="now-ui-icons media-2_sound-wave"></i>
-                        <p>
-                            <span class="d-lg-none d-md-block">{{ __("Stats") }}</span>
-                        </p>
-                    </a>
-                </li> -->
                 <li class="nav-item dropdown">
                     <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
@@ -50,15 +32,34 @@
                         @if (Auth::user()->unreadNotifications->count())
                         <h6 class="dropdown-header">Notifikasi Baru</h6>
                         <div id="notificationList">
-                            @foreach (Auth::user()->unreadNotifications as $notification)
-                            <a class="dropdown-item d-flex align-items-center" href="{{ $notification->data['url'] }}">
+                            @php
+                            $notificationCounts = [];
+                            @endphp
+
+                            @foreach (Auth::user()->unreadNotifications->sortByDesc('created_at') as $notification)
+
+                            @php
+                            $title = $notification->data['title'];
+
+                            if (!isset($notificationCounts[$title])) {
+                            $notificationCounts[$title] = 1;
+                            } else {
+                            $notificationCounts[$title]++;
+                            }
+
+                            $currentCount = $notificationCounts[$title];
+                            @endphp
+
+                            <a class="dropdown-item d-flex align-items-center notification-item unread"
+                                href="{{ $notification->data['url'] }}" data-id="{{ $notification->id }}">
                                 <div class="mr-3">
                                     <div class="icon-circle bg-primary">
                                         <i class="fas fa-file-alt text-white"></i>
                                     </div>
                                 </div>
                                 <div>
-                                    <span class="font-weight-bold">{{ $notification->data['title'] }}</span><br>
+                                    <span class="font-weight-bold">{{ $notification->data['title'] }}
+                                        @if($notificationCounts[$title] > 1) - {{ $currentCount }} @endif</span><br>
                                     <strong class="text-danger">{{ $notification->data['message'] }}</strong><br>
                                 </div>
                             </a>
@@ -66,7 +67,7 @@
                             @endforeach
                         </div>
                         <a class="dropdown-item text-center small text-gray-500"
-                            href="{{ $notification->data['url'] }}">Lihat
+                            href="{{ Auth::user()->unreadNotifications->first()?->data['url_data'] ?? '#' }}">Lihat
                             Semua Surat</a>
                         <button id="markAllAsRead" class="dropdown-item text-center small text-gray-500"><i
                                 class="fas fa-check"></i> Tandai Semua Telah Dibaca</button>
@@ -74,19 +75,6 @@
                         <a class="dropdown-item text-center" href="#">Tidak ada notifikasi baru</a>
                         @endif
                     </div>
-
-                    <!-- <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
-                        <i class="now-ui-icons location_world"></i>
-                        <p>
-                            <span class="d-lg-none d-md-block">{{ __("Some Actions") }}</span>
-                        </p>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                        <a class="dropdown-item" href="#">{{ __("Action") }}</a>
-                        <a class="dropdown-item" href="#">{{ __("Another action") }}</a>
-                        <a class="dropdown-item" href="#">{{ __("Something else here") }}</a>
-                    </div> -->
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown"

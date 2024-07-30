@@ -6,6 +6,7 @@
     <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('assets') }}/img/logo-jpt.png">
     <link rel="icon" type="image/png" href="{{ asset('assets') }}/img/logo-jpt.png">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Extra details for Live View on GitHub Pages -->
     <title>
         jasakorres
@@ -62,24 +63,64 @@
     <script src="{{ asset('assets') }}/demo/demo.js"></script>
     <script src="{{ asset('assets') }}/js/custom.js"></script>
     <script>
+    document.querySelectorAll('.notification-item').forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.preventDefault(); // Prevent default link action
+
+            const notificationId = this.getAttribute('data-id');
+            const url = this.getAttribute('href');
+
+            fetch(`/notifications/${notificationId}/read`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                            .getAttribute('content'),
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        id: notificationId
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        this.classList.remove('unread'); // Mark the notification visually as read
+                        window.location.href = url; // Redirect to the URL
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        });
+    });
+
+    // Mark all notifications as read
     document.getElementById('markAllAsRead').addEventListener('click', function() {
-        fetch('{{ route("notifications.markAsRead") }}', {
+        fetch(`/notifications/mark-all-read`, {
                 method: 'POST',
                 headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                        'content'),
                     'Content-Type': 'application/json'
-                },
+                }
             })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    // Update UI to reflect notifications have been read
-                    document.querySelector('.badge').innerText = '0';
-                    document.querySelectorAll('#notificationList .dropdown-item').forEach(item => {
-                        item.classList.remove('dropdown-item-info');
+                    // Remove unread class from all notification items
+                    document.querySelectorAll('.notification-item.unread').forEach(item => {
+                        item.classList.remove('unread');
+                    });
+                    Swal.fire({
+                        title: 'Berhasil!',
+                        text: 'Semua notifikasi telah ditandai sebagai dibaca.',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        // Reload the page after the alert is closed
+                        window.location.reload();
                     });
                 }
-            });
+            })
+            .catch(error => console.error('Error:', error));
     });
 
     function showCodeInputForm(letterId) {

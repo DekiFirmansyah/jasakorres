@@ -30,25 +30,27 @@ class UpdateLetterNotification extends Notification
     {
         return (new MailMessage)
                     ->line('Ada surat yang perlu Anda perbarui.')
-                    ->action('Lihat Surat', url('/letters/'))
+                    ->action('Lihat Surat', url(route('letters.show', $this->letter->id)))
                     ->line('Terima kasih telah menggunakan aplikasi kami!');
     }
 
     public function toArray($notifiable)
     {
         return [
-            'url' => '/letters/',
+            'url' => route('letters.show', $this->letter->id),
             'message' => 'Surat perlu diperbarui!',
             'title' => $this->letter->title,
+            'url_data' => '/letters/',
         ];
     }
 
     public function toBroadcast($notifiable)
     {
         return new BroadcastMessage([
-            'url' => '/letters/',
+            'url' => route('letters.show', $this->letter->id),
             'message' => 'Surat perlu diperbarui!',
             'title' => $this->letter->title,
+            'url_data' => '/letters/',
         ]);
     }
 

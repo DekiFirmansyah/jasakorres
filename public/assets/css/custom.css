@@ -70,3 +70,22 @@
 .dataTables_wrapper .dataTables_length select {
     font-size: 0.875em;
 }
+
+/* notification */
+.notification-item.unread {
+    background-color: #f8f9fa;
+    font-weight: bold;
+}
+
+.notification-item {
+    transition: background-color 0.3s ease;
+}
+
+.notification-item:hover {
+    background-color: #e2e6ea;
+}
+
+.notification-item.read {
+    background-color: #ffffff;
+    font-weight: normal;
+}

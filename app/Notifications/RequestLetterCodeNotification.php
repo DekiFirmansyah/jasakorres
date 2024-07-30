@@ -37,18 +37,20 @@ class RequestLetterCodeNotification extends Notification
     public function toArray($notifiable)
     {
         return [
-            'url' => '/validations/',
+            'url' => route('validations.code', $this->letter->id),
             'message' => 'Surat perlu diberikan nomor surat!',
             'title' => $this->letter->title,
+            'url_data' => '/validations/',
         ];
     }
 
     public function toBroadcast($notifiable)
     {
         return new BroadcastMessage([
-            'url' => '/validations/',
+            'url' => route('validations.code', $this->letter->id),
             'message' => 'Surat perlu diberikan nomor surat!',
             'title' => $this->letter->title,
+            'url_data' => '/validations/',
         ]);
     }
 
